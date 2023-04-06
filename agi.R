@@ -64,16 +64,39 @@ process_action <- function(msg) {
 
 while(T) {
 	# extract the command
-	msg <- fromJSON(agi_response$choices$message.content)
+	msgRaw <- agi_response$choices$message.content
+	msg <- tryCatch(fromJSON(msgRaw),
+		error = function(e) {
+			message <- conditionMessage(e)
+			warning("An error occurred while parsing JSON: ", message)
+			NULL
+		}
+	)
 
-	# print the action and comment for us to read
-	print(paste("Requested action:",msg))
-	x <- readline("Continue? y/n: ")
-	if(x=="n") {
-		break
+	# check if commands are valid
+
+	if(is.null(msg)) {
+		print("AGI fucked up")
+		print(msgRaw)
+		print("respond to it: ")
+		action_msg <- readline()
+	} else {
+		# print the action and comment for us to read
+		print(paste("Requested action:",msg))
+		x <- readline("Continue? y-yes n-no i-inject x-debug: ")
+		if(x=="n") {
+			break
+		} else if(x=="x") {
+			browser()
+		} else if(x=="i") {
+			print("respond to him: ")
+			action_msg <- readline()
+		} else if(x=="y") {
+			action_msg <- process_action(msg)
+		}
 	}
 
-	action_msg <- process_action(msg)
+
 
 	agi_response <- agi_chat(a0_id,action_msg)
 
