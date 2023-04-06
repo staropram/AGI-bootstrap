@@ -19,7 +19,7 @@ agent_new <- function() {
 
 agent_append_msg <- function(agent_id,msg,role) {
 
-	global$agents[[agent_id]]$messages <- c(global$agent[[agent_id]]$messages,list(list(
+	global$agents[[agent_id]]$messages <- c(global$agents[[agent_id]]$messages,list(list(
 		"role" =role,"content"=msg
 	)))
 	#agent$messages <- append(agent$messages,
@@ -30,6 +30,8 @@ agent_append_msg <- function(agent_id,msg,role) {
 agi_chat <- function(agent_id,msg) {
 	agent_append_msg(agent_id,msg,"user")
 	agent <- global$agents[[agent_id]]
+	#browser()
+	print(agent$messages)
 	# Generate a completion
 	completion <- create_chat_completion(
 	  model = "gpt-3.5-turbo",
@@ -54,5 +56,25 @@ close(f)
 
 a0_id <- agent_new()
 
-# send the first message to the AGI
-comp <- agi_chat(a0_id,initial_prompt)
+agi_response <- agi_chat(a0_id,initial_prompt)
+
+process_action <- function(msg) {
+	agi_commands[[msg$action]]$f(msg)
+}
+
+while(T) {
+	# extract the command
+	msg <- fromJSON(agi_response$choices$message.content)
+
+	# print the action and comment for us to read
+	print(paste("Requested action:",msg))
+	x <- readline("Continue? y/n: ")
+	if(x=="n") {
+		break
+	}
+
+	action_msg <- process_action(msg)
+
+	agi_response <- agi_chat(a0_id,action_msg)
+
+}

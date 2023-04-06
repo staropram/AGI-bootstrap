@@ -8,4 +8,10 @@ You can only respond to me with JSON requests and I will fulfill those requests 
 
 With any command you may include an optional "comment" field as above which explains why you are doing what you are doing in 300 chars or less.
 
+Every message has to be in the correct format it has to just be JSON message, this is very important, otherwise you will break my end of the system.
+
+You cannot invent commands using just text, you have to use only what is avaiable, otherwise you need to create the program file on my system.
+
+The current AGI client on my side is written in R, the only commands available are the ones listed until you create your own.
+
 Let us begin.
