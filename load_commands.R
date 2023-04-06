@@ -6,9 +6,10 @@ agi_commands <- lapply(command_files,function(fn) {
 	sc <- list()
 	sc[[cmd_name]] <- file_content
 
-	return(sc)
-})[[1]]
-
+	#return(sc)
+	get(paste0("command_",cmd_name))
+})
+names(agi_commands) <- sub("\\.R$","",command_files)
 
 command_list_commands <- list(
 	usage='{"action":"list_commands"} returns list of possible commands',
