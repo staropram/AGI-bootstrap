@@ -1,10 +1,69 @@
 library(openai)
-g_agent_count <- 0
-g_agent_id <- 0
+library(R6)
 
 global <- new.env()
 
 global$agents <- list()
+
+AgentManager <- R6Class(
+	"AgentManager",
+	public = list(
+		agents = list(),
+		agentCount = 0,
+		agentIDSeq = 0,
+
+		initialize = function() {},
+
+		addAgent = function(agent) {
+			self$agents[[agent$id]] <- agent 
+			#c(self$agents,list(id=agent))
+		},
+
+		newAgent = function() {
+			agent <- Agent$new(self$agentIDSeq)
+			self$agentIDSeq <- self$agentIDSeq + 1
+			self$agentCount <- self$agentCount + 1
+			self$addAgent(agent)
+			agent
+		}
+
+	)
+)
+
+Agent <- R6Class(
+	"Agent",
+	public = list(
+		id = "",
+		messages = list(),
+
+		initialize = function(id) {
+			self$id <- paste0("a",id)
+		},
+
+		appendMessage = function(role,msg) {
+			self$messages <- c(self$messages,list(list(
+				"role" =role,"content"=msg
+			)))
+		},
+
+		chat = function(msg) {
+			self$appendMessage("user",msg)
+			print(self$messages)
+			completion <- create_chat_completion(
+			  model = "gpt-3.5-turbo",
+			  messages = self$messages,
+			  max_tokens = 1024,
+			  n = 1,
+			  stop = NULL,
+			  temperature = 0.7
+			)
+			self$appendMessage("assistant",completion$choices$message.content)
+			completion
+		}
+	)
+)
+
+agentManager <- AgentManager$new()
 
 agent_new <- function() {
 	a <- list(
@@ -50,13 +109,18 @@ exit <- F
 # load the commands
 source('load_commands.R')
 
-f <- file("initial_prompt.txt","r")
-initial_prompt <- paste(readLines(f),collapse="")
-close(f)
+load_initial_prompt <- function() {
+	f <- file("initial_prompt.txt","r")
+	prompt <- paste(readLines(f),collapse="")
+	close(f)
+	prompt
+}
 
-a0_id <- agent_new()
+initial_prompt <- load_initial_prompt()
 
-agi_response <- agi_chat(a0_id,initial_prompt)
+a0 <- agentManager$newAgent()
+
+agi_response <- a0$chat(initial_prompt)
 
 process_action <- function(msg) {
 	agi_commands[[msg$action]]$f(msg)
@@ -98,6 +162,6 @@ while(T) {
 
 
 
-	agi_response <- agi_chat(a0_id,action_msg)
+	agi_response <- a0$chat(action_msg)
 
 }
