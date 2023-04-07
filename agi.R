@@ -1,5 +1,6 @@
 library(openai)
 library(R6)
+library(jsonlite)
 
 global <- new.env()
 
