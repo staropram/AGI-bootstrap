@@ -2,72 +2,11 @@ library(openai)
 library(R6)
 library(jsonlite)
 
-global <- new.env()
+source("Agent.R")
+source("AgentManager.R")
+source("CommandHandler.R")
 
-global$agents <- list()
-
-AgentManager <- R6Class(
-	"AgentManager",
-	public = list(
-		agents = list(),
-		agentCount = 0,
-		agentIDSeq = 0,
-
-		initialize = function() {},
-
-		addAgent = function(agent) {
-			self$agents[[agent$id]] <- agent 
-			#c(self$agents,list(id=agent))
-		},
-
-		newAgent = function() {
-			agent <- Agent$new(self$agentIDSeq)
-			self$agentIDSeq <- self$agentIDSeq + 1
-			self$agentCount <- self$agentCount + 1
-			self$addAgent(agent)
-			agent
-		}
-
-	)
-)
-
-Agent <- R6Class(
-	"Agent",
-	public = list(
-		id = "",
-		messages = list(),
-
-		initialize = function(id) {
-			self$id <- paste0("a",id)
-		},
-
-		appendMessage = function(role,msg) {
-			self$messages <- c(self$messages,list(list(
-				"role" =role,"content"=msg
-			)))
-		},
-
-		chat = function(msg) {
-			self$appendMessage("user",msg)
-			print(self$messages)
-			completion <- create_chat_completion(
-			  model = "gpt-3.5-turbo",
-			  messages = self$messages,
-			  max_tokens = 1024,
-			  n = 1,
-			  stop = NULL,
-			  temperature = 0.7
-			)
-			self$appendMessage("assistant",completion$choices$message.content)
-			completion
-		}
-	)
-)
-
-agentManager <- AgentManager$new()
-
-# load the commands
-source('load_commands.R')
+commandHandler <- CommandHandler$new()
 
 load_initial_prompt <- function() {
 	f <- file("initial_prompt.txt","r")
@@ -78,13 +17,13 @@ load_initial_prompt <- function() {
 
 initial_prompt <- load_initial_prompt()
 
+# create agent manager and add a new default agent
+agentManager <- AgentManager$new()
 a0 <- agentManager$newAgent()
 
+# get the initial response
 agi_response <- a0$chat(initial_prompt)
 
-process_action <- function(msg) {
-	agi_commands[[msg$action]]$f(msg)
-}
 
 while(T) {
 	# extract the command
@@ -119,7 +58,7 @@ while(T) {
 			print("respond to him: ")
 			action_msg <- readline()
 		} else if(x=="y") {
-			action_msg <- process_action(msg)
+			action_msg <- commandHandler$executeCommand(msg)
 		}
 	}
 

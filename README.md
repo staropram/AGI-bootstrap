@@ -1,4 +1,23 @@
-# todo
+# summary
+The purpose of this project is to see if an LLM (such as chatgpt) can bootstrap itself towards AGI.
+
+Think of it like an AI escape room, where we can test how much the AI can do with basic commands.
+
+In theory the AI only really needs the following commands:
+
+1) File operations (read,write,delete)
+2) Run file (and observe output)
+3) Ask user for help
+
+It should then be able to create any command it needs, including internet lookup functions.
+
+It would need the ability to ask the user for help because it might need API keys etc or access to paid resources. I suppose a really smart AI would just figure that out by hacking the local system.
+
+It should be able to create all the data structures it needs to keep track of itself.
+
+Aavailable commands are in the "commands" directory, initial prompt is in "initial_prompt.txt"
+
+# TODO
 
 1. add create_commmand command
 2. add create_function command
@@ -6,23 +25,6 @@
 4. make it so the AI can send a command embedded in text
 and extract that command if necessary
 5. AI also sends command sequences so maybe queue and execute commands if this happens
+6. make a directory "ai interfaces" so we can use vicuna etc
+7. make a "fakeai" interface for testing that sends prescribed sequences
 
-# summary
-The purpose of this is to see if an LLM (such as chatgpt4) can bootstrap itself towards AGI.
-
-It is an interesting experiment to see what it will do given the tools.
-
-In theory bootstrap only really needs the following commands:
-
-1) file operations (read,write,delete)
-2) run file (and observe output)
-3) create command (that it can use, which just runs the program it creates from 1 and 2)
-4) ask user for help
-
-It should then be able to create any command it needs, including internet lookup functions.
-
-It has the ability to ask user for help because it might need API keys etc or access to paid resources.
-
-It should be able to create all the data structures it needs to keep track of itself.
-
-available commands are in "commands", initial prompt is in "initial_prompt.txt"
