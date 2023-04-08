@@ -1,5 +1,4 @@
 # load the commands
-source('load_commands.R')
 CommandHandler <- R6Class(
 	"CommandHandler",
 	public = list(
@@ -36,6 +35,11 @@ CommandHandler <- R6Class(
 		},
 
 		validate = function(msg) {
+			if(is.null(msg)) {
+				return(list(
+					isValid=F
+				))
+			}
 			list(
 				isValid=msg$action %in% self$commandNames
 			)

@@ -4,8 +4,11 @@ AgentManager <- R6Class(
 		agents = list(),
 		agentCount = 0,
 		agentIDSeq = 0,
+		config = NULL,
 
-		initialize = function() {},
+		initialize = function(config) {
+			self$config <- config
+		},
 
 		addAgent = function(agent) {
 			self$agents[[agent$id]] <- agent 
@@ -13,7 +16,7 @@ AgentManager <- R6Class(
 		},
 
 		newAgent = function() {
-			agent <- Agent$new(self$agentIDSeq)
+			agent <- Agent$new(self$config,self$agentIDSeq)
 			self$agentIDSeq <- self$agentIDSeq + 1
 			self$agentCount <- self$agentCount + 1
 			self$addAgent(agent)

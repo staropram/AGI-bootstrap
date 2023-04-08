@@ -5,6 +5,7 @@ library(jsonlite)
 source("Agent.R")
 source("AgentManager.R")
 source("CommandHandler.R")
+source("config.R")
 
 commandHandler <- CommandHandler$new()
 
@@ -18,12 +19,11 @@ load_initial_prompt <- function() {
 initial_prompt <- load_initial_prompt()
 
 # create agent manager and add a new default agent
-agentManager <- AgentManager$new()
+agentManager <- AgentManager$new(config)
 a0 <- agentManager$newAgent()
 
 # get the initial response
 agi_response <- a0$chat(initial_prompt)
-
 
 while(T) {
 	# extract the command

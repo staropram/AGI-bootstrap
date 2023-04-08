@@ -1,11 +1,16 @@
+source('GPTInterface.R')
 Agent <- R6Class(
 	"Agent",
 	public = list(
 		id = "",
 		messages = list(),
+		gptInterface = NULL,
+		config = NULL,
 
-		initialize = function(id) {
+		initialize = function(config,id) {
 			self$id <- paste0("a",id)
+			self$gptInterface <- GPTInterface$new(config)
+			self$config <- config
 		},
 
 		appendMessage = function(role,msg) {
@@ -15,18 +20,16 @@ Agent <- R6Class(
 		},
 
 		chat = function(msg) {
-			self$appendMessage("user",msg)
-			print(self$messages)
-			completion <- create_chat_completion(
-			  model = "gpt-3.5-turbo",
-			  messages = self$messages,
-			  max_tokens = 1024,
-			  n = 1,
-			  stop = NULL,
-			  temperature = 0.7
-			)
-			self$appendMessage("assistant",completion$choices$message.content)
-			completion
+			#self$appendMessage("user",msg)
+			#print(self$messages)
+			#completion <- create_chat_completion(
+			  #model = "gpt-3.5-turbo",
+			 # messages = self$messages,
+			 # max_tokens = 1024
+			#)
+			#self$appendMessage("assistant",completion$choices$message.content)
+			#completion
+			gptInterface$chat(msg)
 		}
 	)
 )
