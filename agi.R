@@ -7,16 +7,17 @@ source("AgentManager.R")
 source("CommandHandler.R")
 source("config.R")
 
-commandHandler <- CommandHandler$new()
+setwd(config$root)
 
 load_initial_prompt <- function() {
-	f <- file("initial_prompt.txt","r")
-	prompt <- paste(readLines(f),collapse="")
-	close(f)
+	fn <- paste0("data/prompts/",config$initialPrompt)
+	prompt <- paste(readLines(fn),collapse="")
 	prompt
 }
 
 initial_prompt <- load_initial_prompt()
+
+commandHandler <- CommandHandler$new(config)
 
 # create agent manager and add a new default agent
 agentManager <- AgentManager$new(config)
@@ -27,7 +28,7 @@ agi_response <- a0$chat(initial_prompt)
 
 while(T) {
 	# extract the command
-	msgRaw <- agi_response$choices$message.content
+	msgRaw <- agi_response$msg
 	msg <- tryCatch(fromJSON(msgRaw),
 		error = function(e) {
 			message <- conditionMessage(e)
@@ -73,6 +74,7 @@ while(T) {
 		if(a=="q") { break }
 	}
 
+	print(action_msg)
 	agi_response <- a0$chat(action_msg)
 
 }

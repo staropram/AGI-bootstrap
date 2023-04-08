@@ -9,7 +9,7 @@ Agent <- R6Class(
 
 		initialize = function(config,id) {
 			self$id <- paste0("a",id)
-			self$gptInterface <- GPTInterface$new(config)
+			self$gptInterface <- GPTInterface$new(self,config)
 			self$config <- config
 		},
 
@@ -29,7 +29,7 @@ Agent <- R6Class(
 			#)
 			#self$appendMessage("assistant",completion$choices$message.content)
 			#completion
-			gptInterface$chat(msg)
+			self$gptInterface$chat(msg)
 		}
 	)
 )

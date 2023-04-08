@@ -1,18 +1,19 @@
 config <- list(
 	chatType="fakegpt",
-	name="test0",
-	workingDirPrefix="runtime",
+	aiName="test0",
+	root="/home/ash/agi",
+	runtimeDirPrefix="runtime",
+	initialPrompt="agi_prompt_v0.1.txt",
 
 	# ChatGPT options
-	chatgpt <- list(
+	chatgpt = list(
 		model = "gpt-3.5-turbo",
 		max_tokens = 1024
 	),
 
 	# FakeGPT options
-	fakegpt <- list(
-		# in this case the model is the script
-		model = "create_file_test"
+	fakegpt = list(
+		script = "create_file_test"
 	)
 
 	# Vicuna

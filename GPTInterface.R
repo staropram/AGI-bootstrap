@@ -1,3 +1,4 @@
+source("FakeAI.R")
 GPTInterface <- R6Class(
 	"GPTInterface",
 	public = list(
@@ -32,10 +33,17 @@ GPTInterface <- R6Class(
 
 		chat = function(msg) {
 			f <- switch(self$type,
-				"chatgpt" = chatOpenAI,
-				"fakegpt" = chatFakeAI
+				"chatgpt" = self$chatOpenAI,
+				"fakegpt" = self$chatFakeAI
 			)
-			f(msg)
+			apiResponse <- f(msg)
+			list(
+				apiResponse = apiResponse,
+				msg=switch(self$type,
+					"chatgpt" = apiResponse$choices$message.content,
+					"fakegpt" = apiResponse
+				)
+			)
 		}
 	)
 )
