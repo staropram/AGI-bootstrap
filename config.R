@@ -1,5 +1,5 @@
 config <- list(
-	chatType="fakegpt",
+	chatType="chatgpt",
 	aiName="test0",
 	root="/home/ash/agi",
 	runtimeDirPrefix="runtime",

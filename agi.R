@@ -43,9 +43,9 @@ while(T) {
 		# as below
 		print(msgRaw)
 		a <- "z"
-		while(a!="r") {
-			a <- readline("Cannot parse, r-respond, d-debug, q-quit: ")
-			if(a=="r") {
+		while(a!="i") {
+			a <- readline("Cannot parse, i-interact, d-debug, q-quit: ")
+			if(a=="i") {
 				action_msg <- readline()
 			} else if(a=="d") {
 				browser()
@@ -58,10 +58,10 @@ while(T) {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
 		a <- "z"
-		while(a!="r") {
-			a <- readline("c-continue, r-respond, d-debug, q-quit: ")
-			if(a=="r") {
-				action_msg <- readline()
+		while(a!="i") {
+			a <- readline("c-continue, i-interact, d-debug, q-quit: ")
+			if(a=="i") {
+				action_msg <- readline("Your response: ")
 			} else if(a=="d") {
 				browser()
 			} else if(a=="q") {

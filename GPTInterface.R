@@ -27,7 +27,7 @@ GPTInterface <- R6Class(
 			completion
 		},
 
-		chatFakeAI = function(msg) {
+		chatFakeAI = function(agent,msg) {
 			self$fakeAI$chat(msg)
 		},
 
@@ -36,7 +36,7 @@ GPTInterface <- R6Class(
 				"chatgpt" = self$chatOpenAI,
 				"fakegpt" = self$chatFakeAI
 			)
-			apiResponse <- f(msg)
+			apiResponse <- f(self$agent,msg)
 			list(
 				apiResponse = apiResponse,
 				msg=switch(self$type,
