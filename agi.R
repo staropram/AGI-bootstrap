@@ -66,47 +66,6 @@ Agent <- R6Class(
 
 agentManager <- AgentManager$new()
 
-agent_new <- function() {
-	a <- list(
-		id = paste0("a",g_agent_id),
-		messages = list()
-	)
-	g_agent_count <- g_agent_count + 1
-	g_agent_id <- g_agent_id + 1
-	global$agents[[a$id]] <- a
-	a$id
-}
-
-agent_append_msg <- function(agent_id,msg,role) {
-
-	global$agents[[agent_id]]$messages <- c(global$agents[[agent_id]]$messages,list(list(
-		"role" =role,"content"=msg
-	)))
-	#agent$messages <- append(agent$messages,
-	#	paste0('{"role":"',role,'","content":"',msg,'"}')
-	#)
-}
-
-agi_chat <- function(agent_id,msg) {
-	agent_append_msg(agent_id,msg,"user")
-	agent <- global$agents[[agent_id]]
-	#browser()
-	print(agent$messages)
-	# Generate a completion
-	completion <- create_chat_completion(
-	  model = "gpt-3.5-turbo",
-	  messages = agent$messages,
-	  max_tokens = 1024,
-	  n = 1,
-	  stop = NULL,
-	  temperature = 0.7
-	)
-	agent_append_msg(agent_id,completion$choices$message.content,"assistant")
-	completion
-}
-
-exit <- F
-
 # load the commands
 source('load_commands.R')
 
@@ -142,6 +101,8 @@ while(T) {
 
 	if(is.null(msg)) {
 		print("AGI fucked up")
+		# XXX this needs to have the same recovery loop
+		# as below
 		print(msgRaw)
 		print("respond to it: ")
 		action_msg <- readline()
@@ -149,6 +110,7 @@ while(T) {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
 		x <- readline("Continue? y-yes n-no i-inject x-debug: ")
+		# XXX make this a loop so we can debug then inject
 		if(x=="n") {
 			break
 		} else if(x=="x") {

@@ -11,6 +11,17 @@ agi_commands <- lapply(command_files,function(fn) {
 })
 names(agi_commands) <- sub("\\.R$","",command_files)
 
+agi_commands_list <- lapply(agi_commands,function(cmd) {
+	if(!cmd$active) {
+		return(NULL)
+	}
+	cmd$usage 
+})
+# remove inactives, xxx not sure we should do this
+# maybe just keep track of which are active dynamically
+agi_commands_list <- Filter(Negate(is.null),agi_commands_list)
+
+# add a list commands command
 command_list_commands <- list(
 	usage='{"action":"list_commands"} returns list of possible commands',
 	f=function(args) {
@@ -18,6 +29,3 @@ command_list_commands <- list(
 	}
 )
 agi_commands[["list_commands"]] <- command_list_commands
-
-agi_commands_list <- lapply(agi_commands,function(cmd) { cmd$usage })
-
