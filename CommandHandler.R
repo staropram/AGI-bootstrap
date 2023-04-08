@@ -5,6 +5,7 @@ CommandHandler <- R6Class(
 	public = list(
 		commands = list(),
 		commandList = list(),
+		commandNames = list(),
 
 		initialize = function() {
 			self$loadCommands()
@@ -31,13 +32,16 @@ CommandHandler <- R6Class(
 			# maybe just keep track of which are active dynamically
 			self$commandList <- Filter(Negate(is.null),self$commandList)
 
+			self$commandNames <- names(self$commands)
 		},
 
-		validateCommand = function(cmd) {
+		validate = function(msg) {
+			list(
+				isValid=msg$action %in% self$commandNames
+			)
 		},
 
-		executeCommand = function(msg) {
-			browser()
+		execute = function(msg) {
 			self$commands[[msg$action]]$f(msg)
 		}
 	)

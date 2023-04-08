@@ -37,32 +37,41 @@ while(T) {
 	)
 
 	# check if commands are valid
-
-	if(is.null(msg)) {
-		print("AGI fucked up")
-		# XXX this needs to have the same recovery loop
+	commandValidity <- commandHandler$validate(msg)
+	if(!commandValidity$isValid) {
 		# as below
 		print(msgRaw)
-		print("respond to it: ")
-		action_msg <- readline()
+		a <- "z"
+		while(a!="r") {
+			a <- readline("Cannot parse, r-respond, d-debug, q-quit: ")
+			if(a=="r") {
+				action_msg <- readline()
+			} else if(a=="d") {
+				browser()
+			} else if(a=="q") {
+				break
+			}
+		}
+		if(a=="q") { break }
 	} else {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
-		x <- readline("Continue? y-yes n-no i-inject x-debug: ")
-		# XXX make this a loop so we can debug then inject
-		if(x=="n") {
-			break
-		} else if(x=="x") {
-			browser()
-		} else if(x=="i") {
-			print("respond to him: ")
-			action_msg <- readline()
-		} else if(x=="y") {
-			action_msg <- commandHandler$executeCommand(msg)
+		a <- "z"
+		while(a!="r") {
+			a <- readline("c-continue, r-respond, d-debug, q-quit: ")
+			if(a=="r") {
+				action_msg <- readline()
+			} else if(a=="d") {
+				browser()
+			} else if(a=="q") {
+				break
+			} else if(a=="c") {
+				action_msg <- commandHandler$execute(msg)
+				break
+			}
 		}
+		if(a=="q") { break }
 	}
-
-
 
 	agi_response <- a0$chat(action_msg)
 
