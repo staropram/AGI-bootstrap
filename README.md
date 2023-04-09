@@ -56,7 +56,7 @@ config <- list(
 | `runtimeDirPrefix` | the prefix of the runtime directory (relative to the root). Should probably make this an absolute path in the future.|
 | `initialPrompt` | the prompt that will be sent to the chatgpt/fakegpt to set out the goals of the system, message format, constraints etc. At the moment the goal is to become an AGI but you could put any task here. Prompts are kept in `data/prompts`|
 | `continuous` | is a boolean indicating whether the AGI bootstrap should run continuously or ask for confirmation before each step.|
-|`cleanWorkingDir` |is a boolean indicating whether the AIs working directory should be erased before starting. This is useful for testing, but if the AI creates a bunch of stuff you might not want to do this.|
+|`cleanWorkingDir` |is a boolean indicating whether the AIs working directory should be erased before starting. This is useful for testing, but if the AI creates a bunch of stuff you might not want to do this. Note that this option is set to false if you answer yes to restoring the state of a previous run.|
 
 ## Chat model options
 ### ChatGPT
@@ -85,3 +85,4 @@ The commands that have so far been defined are in the `commands` directory. Thes
 4. ChatGPT 3.5 likes to interject text outside of the JSON messages which is annoying and breaks command processing. So the command processing should be less fragile and deal with this in some sane manner.
 5. AI also liks to send command sequences in a single message so could create a command queue and handle this.
 6. Make sure each command can print itself
+7. Probably should group commands and allow multiple endpoints per command to increase coupling.
