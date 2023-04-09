@@ -11,7 +11,6 @@ source("Agent.R")
 source("AgentManager.R")
 source("CommandHandler.R")
 
-
 load_initial_prompt <- function() {
 	fn <- paste0("data/prompts/",config$initialPrompt)
 	prompt <- paste(readLines(fn),collapse="")
@@ -32,6 +31,10 @@ agi_response <- a0$chat(initial_prompt)
 while(T) {
 	# extract the command
 	msgRaw <- agi_response$msg
+	if(msgRaw=="exit") {
+		break
+	}
+
 	msg <- tryCatch(fromJSON(msgRaw),
 		error = function(e) {
 			message <- conditionMessage(e)
@@ -61,7 +64,7 @@ while(T) {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
 		a <- "z"
-		while(a!="i") {
+		while(a!="i" & !config$continuous) {
 			a <- readline("c-continue, i-interact, d-debug, q-quit: ")
 			if(a=="i") {
 				action_msg <- readline("Respond: ")

@@ -6,12 +6,12 @@ CommandHandler <- R6Class(
 		commands = NULL,
 		commandList = NULL,
 		commandNames = NULL,
-		commandDir = "",
+		workingDir = "",
 		commandFiles=NULL,
 
 		initialize = function(config) {
 			self$config <- config
-			self$commandDir <- paste0(
+			self$workingDir <- paste0(
 				config$runtimeDirPrefix,"/",
 				config$aiName
 			)
@@ -19,12 +19,19 @@ CommandHandler <- R6Class(
 			self$commandFiles <-list.files("commands",pattern="*.cmd.R")
 
 			# create directory if necessary
-			if(!dir.exists(self$commandDir)) {
-				dir.create(self$commandDir)
+			if(!dir.exists(self$workingDir)) {
+				dir.create(self$workingDir)
 			}
+			# clean the directory if asked to in the config
+			if(config$cleanWorkingDir==T) {
+				for(f in self$commandFiles) {
+					file.remove(paste0(self$workingDir,"/",f))
+				}
+			}
+
 			# copy the base commands into the runtime dir
 			for(f in self$commandFiles) {
-				file.copy(paste0("commands/",f),self$commandDir,overwrite=T)
+				file.copy(paste0("commands/",f),self$workingDir,overwrite=T)
 			}
 
 			self$loadCommands()
@@ -32,14 +39,14 @@ CommandHandler <- R6Class(
 
 		loadCommands = function() {
 			self$commands <- lapply(self$commandFiles,function(fn) {
-				cmd_name <- sub("\\.R$", "", fn)
-				source(paste0(self$commandDir,"/",fn))
+				cmd_name <- sub("\\.cmd\\.R$", "", fn)
+				source(paste0(self$workingDir,"/",fn))
 				file_content <- get(paste0("command_",cmd_name))
 				sc <- list()
 				sc[[cmd_name]] <- file_content
 				get(paste0("command_",cmd_name))
 			})
-			names(self$commands) <- sub("\\.R$","",self$commandFiles)
+			names(self$commands) <- sub("\\.cmd\\.R$","",self$commandFiles)
 			self$commandList <- lapply(self$commands,function(cmd) {
 				if(!cmd$active) {
 					return(NULL)
@@ -66,7 +73,7 @@ CommandHandler <- R6Class(
 
 		execute = function(msg) {
 			currentDir <- getwd()
-			setwd(self$commandDir)
+			setwd(self$workingDir)
 			output <- self$commands[[msg$action]]$f(msg)
 			setwd(currentDir)
 			output

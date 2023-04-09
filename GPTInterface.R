@@ -28,6 +28,7 @@ GPTInterface <- R6Class(
 		},
 
 		chatFakeAI = function(agent,msg) {
+			Sys.sleep(config$fakegpt$artificialDelaySecs)
 			self$fakeAI$chat(msg)
 		},
 

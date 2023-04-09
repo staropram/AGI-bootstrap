@@ -1,9 +1,10 @@
 config <- list(
-	chatType="chatgpt",
+	chatType="fakegpt",
 	aiName="test0",
-	root="/home/ash/agi",
 	runtimeDirPrefix="runtime",
 	initialPrompt="agi_prompt_v0.1.txt",
+	continuous=T,
+	cleanWorkingDir=T,
 
 	# ChatGPT options
 	chatgpt = list(
@@ -13,7 +14,8 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "create_file_test"
+		script = "create_file_test",
+		artificialDelaySecs = 3
 	)
 
 	# Vicuna
