@@ -25,6 +25,3 @@ Aavailable commands are in the "commands" directory, initial prompt is in "initi
 4. make it so the AI can send a command embedded in text
 and extract that command if necessary
 5. AI also sends command sequences so maybe queue and execute commands if this happens
-6. make a directory "ai interfaces" so we can use vicuna etc
-7. make a "fakeai" interface for testing that sends prescribed sequences
-
