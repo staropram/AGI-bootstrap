@@ -39,7 +39,8 @@ config <- list(
 	# ChatGPT options
 	chatgpt = list(
 		model = "gpt-3.5-turbo",
-		max_tokens = 1024
+		max_tokens = 1024,
+        temperature = 0.7
 	),
 
 	# FakeGPT options
@@ -68,6 +69,7 @@ config <- list(
 | ------- | ----------- |
 | `model` | is the OpenAI model to use for the chat endpoint, for example "gpt-3.5-turbo". |
 | `max_tokens` | limits the maximum tokens in any given response. |
+| `temperature` | chatgpt temperature parameter. |
 
 ### FakeGPT
 
