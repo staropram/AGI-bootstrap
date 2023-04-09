@@ -15,9 +15,9 @@ command_show_command_source <- list(
 
 	# print the message
 	printMsg=function(msg) {
-		cat(red,paste0("action: ",msg$action),reset,"\n")
-		cat(green,paste0("command_name: ",msg$command_name,reset,"\n"))
-		cat(blue,paste0("comment: ",msg$comment),reset,"\n")
+		print_action(msg$action)
+		print_param("command_name",msg$command_name)
+		print_comment(msg$comment)
 	}
 )
 

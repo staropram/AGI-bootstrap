@@ -9,13 +9,13 @@ config <- list(
 	# ChatGPT options
 	chatgpt = list(
 		model = "gpt-3.5-turbo",
-		max_tokens = 1024,
+		max_tokens = 512,
 		temperature = 0.7
 	),
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "create_file_test",
+		script = "google_search_test",
 		artificialDelaySecs = 1
 	)
 

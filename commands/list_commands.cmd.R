@@ -9,7 +9,7 @@ command_list_commands <- list(
 	},
 
 	printMsg=function(msg) {
-		cat(red,"action: ",msg$action,reset,"\n")
-		cat(blue,"comment: ",msg$comment,reset,"\n")
+      print_action(msg$action)
+		print_comment(msg$comment)
 	}
 )

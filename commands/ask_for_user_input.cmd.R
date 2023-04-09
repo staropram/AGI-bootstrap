@@ -11,8 +11,8 @@ command_ask_for_user_input <- list(
 
 	# print the message
 	printMsg=function(msg) {
-		cat(red,paste0("action: ",msg$action),reset,"\n")
-		cat(green,paste0("query: ",msg$query),reset,"\n")
-		cat(blue,paste0("comment: ",msg$comment),reset,"\n")
+		print_action(msg$action)
+		print_param("query",msg$query)
+		print_comment(msg$comment)
 	}
 )

@@ -12,8 +12,8 @@ command_source_r_file <- list(
 
 	# print the message
 	printMsg=function(msg) {
-		cat(red,paste0("action: ",msg$action),reset,"\n")
-		cat(green,paste0("fn: ",msg$fn),reset,"\n")
-		cat(blue,paste0("comment: ",msg$comment),reset,"\n")
+		print_action(msg$action)
+		print_param("fn",msg$fn)
+		print_comment(msg$comment)
 	}
 )

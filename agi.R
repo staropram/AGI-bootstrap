@@ -6,11 +6,7 @@ library(jsonlite)
 # and we're in the runtime dir change it back to the root
 setwd(strsplit(getwd(), "/runtime")[[1]][1])
 
-# Define ANSI escape codes for colors
-red <- "\033[31m"
-green <- "\033[32m"
-blue <- "\033[34m"
-reset <- "\033[0m"
+source('color_output.R')
 
 source("config.R")
 source("Agent.R")

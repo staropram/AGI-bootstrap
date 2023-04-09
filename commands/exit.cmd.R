@@ -8,7 +8,7 @@ command_exit <- list(
 
 	# print the message
 	printMsg=function(msg) {
-		cat(paste0(red,"action: ",msg$action),reset,"\n")
-		cat(paste0(blue,"comment: ",msg$comment),reset,"\n")
+		print_action(msg$action)
+		print_comment(msg$comment)
 	}
 )
