@@ -66,9 +66,9 @@ The commands that have so far been defined are in the `commands` directory. Thes
 
 # TODO
 
-1. add create_commmand command
-2. add create_function command
-3. add execute_function command
-4. make it so the AI can send a command embedded in text
-and extract that command if necessary
-5. AI also sends command sequences so maybe queue and execute commands if this happens
+0. Save state and resume
+1. add `create_commmand` command
+2. add `create_function` command
+3. add `execute_function` command
+4. ChatGPT 3.5 likes to interject text outside of the JSON messages which is annoying and breaks command processing. So the command processing should be less fragile and deal with this in some sane manner.
+5. AI also liks to send command sequences in a single message so could create a command queue and handle this.
