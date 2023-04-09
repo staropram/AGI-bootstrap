@@ -1,5 +1,5 @@
 # Summary
-The purpose of this project is to see if an LLM (such as chatgpt) can bootstrap itself towards AGI.
+The purpose of this project is to see if an LLM such as chatgpt can bootstrap itself towards AGI. (could also be pointed toward any goal however)
 
 Think of it like an AI escape room, where we can test how much the AI can do with basic commands.
 
@@ -32,15 +32,44 @@ config <- list(
 )
 ```
 
+## General options
+
 `chatType` can be either "chatgpt" or "fakegpt". 
 
 "chatgpt" uses OpenAI's chatgpt API as a backend so you need to put you API key in the environment variable `OPENAI_API_KEY`
 
 "fakegpt" is a testing framework that reads scripts from `data/fakegpt/scripts`
 
+`aiName` is the name of the AI and will be the name of the working directory inside the runtime directory.
+
+`runtimeDirPrefix` is the prefix of the runtime directory (relative to the root). Should probably make this an absolute path in the future.
+
+`initialPrompt` this is the prompt that will be sent to the chatgpt/fakegpt to set out the goals of the system, message format, constraints etc. At the moment the goal is to become an AGI but you could put any task here. Prompts are kept in `data/prompts`
+
+`continuous` is a boolean indicating whether the AGI bootstrap should run continuously or ask for confirmation before each step.
+
+`cleanWorkingDir` is a boolean indicating whether the AIs working directory should be erased before starting. This is useful for testing, but if the AI creates a bunch of stuff you might not want to do this.
+
+## Chat model options
+### ChatGPT
+
+`model` is the OpenAI model to use for the chat endpoint, for example "gpt-3.5-turbo".
+
+`max_tokens` limits the maximum tokens in any given response.
+
+### FakeGPT
+
+| Command | Description |
+| ------- | ----------- |
+| `script`| the script to run |
+
+
+`artificialDelaySecs` adds an artifical delay so you can
+read the responses rather than it all happening in a blur.
+
 ## Adding commands
 
-Available commands are in the "commands" directory, initial prompt is in "initial_prompt.txt"
+The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation.
 
 # TODO
 
