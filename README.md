@@ -62,10 +62,7 @@ config <- list(
 | Command | Description |
 | ------- | ----------- |
 | `script`| the script to run |
-
-
-`artificialDelaySecs` adds an artifical delay so you can
-read the responses rather than it all happening in a blur.
+| `artificialDelaySecs` | adds an artifical delay so you can read the responses rather than it all happening in a blur. |
 
 ## Adding commands
 
