@@ -2,12 +2,15 @@ library(openai)
 library(R6)
 library(jsonlite)
 
+# if last run had an error whilst directory was changed 
+# and we're in the runtime dir change it back to the root
+setwd(strsplit(getwd(), "/runtime")[[1]][1])
+
+source("config.R")
 source("Agent.R")
 source("AgentManager.R")
 source("CommandHandler.R")
-source("config.R")
 
-setwd(config$root)
 
 load_initial_prompt <- function() {
 	fn <- paste0("data/prompts/",config$initialPrompt)
@@ -46,7 +49,7 @@ while(T) {
 		while(a!="i") {
 			a <- readline("Cannot parse, i-interact, d-debug, q-quit: ")
 			if(a=="i") {
-				action_msg <- readline()
+				action_msg <- readline("Respond: ")
 			} else if(a=="d") {
 				browser()
 			} else if(a=="q") {
@@ -61,7 +64,7 @@ while(T) {
 		while(a!="i") {
 			a <- readline("c-continue, i-interact, d-debug, q-quit: ")
 			if(a=="i") {
-				action_msg <- readline("Your response: ")
+				action_msg <- readline("Respond: ")
 			} else if(a=="d") {
 				browser()
 			} else if(a=="q") {
