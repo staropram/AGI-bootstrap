@@ -11,14 +11,15 @@ TLDR: edit `config.R` and then `source("agi.R")` within R.
 
 The system is interactive (see `continuous` option to override). At the present time chatgpt3.5 needs a bit of help and I've noticed that sometimes it is way dumber than other times, so I think OpenAI throttles performance sometimes.
 
-Sometimes chatgpt3.5 will respond with something that isn't a command so you need to tell it to continue.
+Sometimes chatgpt3.5 will respond with something that isn't a command so you need to tell it to continue with commands.
 
 Or sometimes chatgpt3.5 will mix a command with text. Usually you can just respond with:
 
 "send only json"
 
-And it will then send the correct command. It is on the tTODO list to try and figure out what it is trying to do. chatgpt4 is unlikely to do this.
+And it will then send the correct command. It is on the TODO list to try and figure out what it is trying to do. chatgpt4 is unlikely to do this.
 
+Think of this more as a collaboration with the AI, eventually the interventions should be less and less as the AI makes useful suggestions.
 
 # Config
 
@@ -86,3 +87,4 @@ The commands that have so far been defined are in the `commands` directory. Thes
 5. AI also liks to send command sequences in a single message so could create a command queue and handle this.
 6. Make sure each command can print itself
 7. Probably should group commands and allow multiple endpoints per command to increase coupling.
+8. AI needs to be able to reflect on all the source code, not just the commands.
