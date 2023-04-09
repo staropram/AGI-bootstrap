@@ -53,13 +53,14 @@ config <- list(
 ## Chat model options
 ### ChatGPT
 
-`model` is the OpenAI model to use for the chat endpoint, for example "gpt-3.5-turbo".
-
-`max_tokens` limits the maximum tokens in any given response.
+| Option  | Description |
+| ------- | ----------- |
+| `model` | is the OpenAI model to use for the chat endpoint, for example "gpt-3.5-turbo". |
+| `max_tokens` | limits the maximum tokens in any given response. |
 
 ### FakeGPT
 
-| Command | Description |
+| Option  | Description |
 | ------- | ----------- |
 | `script`| the script to run |
 | `artificialDelaySecs` | adds an artifical delay so you can read the responses rather than it all happening in a blur. |
