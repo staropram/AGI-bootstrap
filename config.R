@@ -1,6 +1,6 @@
 config <- list(
 	chatType="chatgpt",
-	aiName="test0",
+	aiName="test1",
 	runtimeDirPrefix="runtime",
 	initialPrompt="agi_prompt_v0.1.txt",
 	continuous=F,
@@ -9,7 +9,8 @@ config <- list(
 	# ChatGPT options
 	chatgpt = list(
 		model = "gpt-3.5-turbo",
-		max_tokens = 1024
+		max_tokens = 1024,
+		temperature = 0.7
 	),
 
 	# FakeGPT options

@@ -21,7 +21,8 @@ GPTInterface <- R6Class(
 			completion <- create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,
-			  max_tokens = config$chatgpt$max_tokens
+			  max_tokens = config$chatgpt$max_tokens,
+			  temperature = config$chatgpt$temperature 
 			)
 			agent$appendMessage("assistant",completion$choices$message.content)
 			completion
