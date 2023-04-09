@@ -1,5 +1,5 @@
 # Summary
-CAVEAT: This is a work in progress and we are at the beginning of that progress. Things may rapidly change or break.
+CAVEAT: This is a work in progress and we are at the beginning of that progress. Things may rapidly change or break. Main external limitation here is context length.
 
 The purpose of this project is to see if an LLM such as chatgpt can bootstrap itself towards AGI. (could also be pointed toward any goal however)
 
