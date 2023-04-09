@@ -76,9 +76,13 @@ config <- list(
 | `script`| the script to run |
 | `artificialDelaySecs` | adds an artifical delay so you can read the responses rather than it all happening in a blur. |
 
-## Adding commands
+# Adding commands
 
 The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation.
+
+# Testing
+
+Testing is done using the "fakegpt" chat interface.
 
 # TODO
 
