@@ -13,7 +13,7 @@ TLDR: edit `config.R` and then `source("agi.R")` within R.
 
 The system is interactive (see `continuous` option to override). At the present time chatgpt3.5 needs a bit of help and I've noticed that sometimes it is way dumber than other times, so I think OpenAI throttles performance sometimes.
 
-Sometimes chatgpt3.5 will respond with something that isn't a command so you need to tell it to continue with commands.
+Sometimes chatgpt3.5 will respond with something that isn't a command so you need to tell it to continue with commands, or you can have a conversation with it if you like.
 
 Or sometimes chatgpt3.5 will mix a command with text. Usually you can just respond with:
 
@@ -94,3 +94,4 @@ Testing is done using the "fakegpt" chat interface.
 6. Make sure each command can print itself
 7. Probably should group commands and allow multiple endpoints per command to increase coupling.
 8. AI needs to be able to reflect on all the source code, not just the commands.
+9. It is relatively easy to exceed the maximum context length. I think we need to ask the AI to compress it's context periodically
