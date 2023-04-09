@@ -15,7 +15,7 @@ config <- list(
 	# FakeGPT options
 	fakegpt = list(
 		script = "create_file_test",
-		artificialDelaySecs = 3
+		artificialDelaySecs = 1
 	)
 
 	# Vicuna

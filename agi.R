@@ -45,6 +45,7 @@ while(T) {
 
 	# check if commands are valid
 	commandValidity <- commandHandler$validate(msg)
+	print(ifelse(commandValidity==T,"Valid command","Invalid command"))
 	if(!commandValidity$isValid) {
 		# as below
 		print(msgRaw)
@@ -64,8 +65,12 @@ while(T) {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
 		a <- "z"
-		while(a!="i" & !config$continuous) {
-			a <- readline("c-continue, i-interact, d-debug, q-quit: ")
+		while(a!="i") {
+			if(config$continuous==T) {
+				a <- "c"
+			} else {
+				a <- readline("c-continue, i-interact, d-debug, q-quit: ")
+			}
 			if(a=="i") {
 				action_msg <- readline("Respond: ")
 			} else if(a=="d") {

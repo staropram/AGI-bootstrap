@@ -24,7 +24,7 @@ CommandHandler <- R6Class(
 			}
 			# clean the directory if asked to in the config
 			if(config$cleanWorkingDir==T) {
-				for(f in self$commandFiles) {
+				for(f in list.files(self$workingDir)) {
 					file.remove(paste0(self$workingDir,"/",f))
 				}
 			}
