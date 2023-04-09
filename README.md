@@ -1,21 +1,46 @@
-# summary
+# Summary
 The purpose of this project is to see if an LLM (such as chatgpt) can bootstrap itself towards AGI.
 
 Think of it like an AI escape room, where we can test how much the AI can do with basic commands.
 
-In theory the AI only really needs the following commands:
+A really clever AI would only need file operations (inc execute) and the ability to ask user for help (such as an API key). Such an AI could create any commands it needs: internet lookup, structs, long term memory, custom NN, etc.
 
-1) File operations (read,write,delete)
-2) Run file (and observe output)
-3) Ask user for help
+# Getting started
 
-It should then be able to create any command it needs, including internet lookup functions.
+Take a look at the config template "config.R":
 
-It would need the ability to ask the user for help because it might need API keys etc or access to paid resources. I suppose a really smart AI would just figure that out by hacking the local system.
+```r
+config <- list(
+	chatType="chatgpt",
+	aiName="test0",
+	runtimeDirPrefix="runtime",
+	initialPrompt="agi_prompt_v0.1.txt",
+	continuous=F,
+	cleanWorkingDir=T,
 
-It should be able to create all the data structures it needs to keep track of itself.
+	# ChatGPT options
+	chatgpt = list(
+		model = "gpt-3.5-turbo",
+		max_tokens = 1024
+	),
 
-Aavailable commands are in the "commands" directory, initial prompt is in "initial_prompt.txt"
+	# FakeGPT options
+	fakegpt = list(
+		script = "create_file_test",
+		artificialDelaySecs = 1
+	)
+)
+```
+
+`chatType` can be either "chatgpt" or "fakegpt". 
+
+"chatgpt" uses OpenAI's chatgpt API as a backend so you need to put you API key in the environment variable `OPENAI_API_KEY`
+
+"fakegpt" is a testing framework that reads scripts from `data/fakegpt/scripts`
+
+## Adding commands
+
+Available commands are in the "commands" directory, initial prompt is in "initial_prompt.txt"
 
 # TODO
 
