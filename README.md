@@ -7,7 +7,9 @@ A really clever AI would only need file operations (inc execute) and the ability
 
 # Getting started
 
-Take a look at the config template "config.R":
+TLDR: edit `config.R` and then `source("agi.R")` within R.
+
+Take a look at the config template `config.R`:
 
 ```r
 config <- list(
@@ -34,9 +36,10 @@ config <- list(
 
 ## General options
 
-`chatType` can be either "chatgpt" or "fakegpt". 
-
-"chatgpt" uses OpenAI's chatgpt API as a backend so you need to put you API key in the environment variable `OPENAI_API_KEY`
+| Option  | Description |
+| ------- | ----------- |
+|`chatType` | can be either "chatgpt" or "fakegpt". 
+"chatgpt" uses OpenAI's chatgpt API as a backend so you need to put you API key in the environment variable `OPENAI_API_KEY` |
 
 "fakegpt" is a testing framework that reads scripts from `data/fakegpt/scripts`
 
