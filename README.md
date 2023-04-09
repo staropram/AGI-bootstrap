@@ -9,6 +9,10 @@ A really clever AI would only need file operations (inc execute) and the ability
 
 TLDR: edit `config.R` and then `source("agi.R")` within R.
 
+The system is interactive (see `continuous` option to override). At the present time chatgpt3.5 needs a bit of help and I've noticed that sometimes it is way dumber than other times, so I think OpenAI throttles performance sometimes.
+
+# Config
+
 Take a look at the config template `config.R`:
 
 ```r
