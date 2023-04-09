@@ -6,6 +6,12 @@ library(jsonlite)
 # and we're in the runtime dir change it back to the root
 setwd(strsplit(getwd(), "/runtime")[[1]][1])
 
+# Define ANSI escape codes for colors
+red <- "\033[31m"
+green <- "\033[32m"
+blue <- "\033[34m"
+reset <- "\033[0m"
+
 source("config.R")
 source("Agent.R")
 source("AgentManager.R")
@@ -79,7 +85,6 @@ while(T) {
 
 	# check if commands are valid
 	commandValidity <- commandHandler$validate(msg)
-	print(ifelse(commandValidity==T,"Valid command","Invalid command"))
 	if(!commandValidity$isValid) {
 		# as below
 		print(msgRaw)
@@ -97,7 +102,7 @@ while(T) {
 		if(a=="q") { break }
 	} else {
 		# print the action and comment for us to read
-		print(paste("Requested action:",msg))
+		commandHandler$printMsg(msg)
 		if(msg$action=="exit") {
 			break
 		}

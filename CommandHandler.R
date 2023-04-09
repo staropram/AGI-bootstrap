@@ -82,6 +82,10 @@ CommandHandler <- R6Class(
 			output <- self$commands[[msg$action]]$f(msg)
 			setwd(currentDir)
 			output
+		},
+
+		printMsg = function(msg) {
+			self$commands[[msg$action]]$printMsg(msg)
 		}
 	)
 )
