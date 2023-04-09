@@ -20,7 +20,6 @@ AgentManager <- R6Class(
 		# make sure the agents ID matches what the
 		# manager expects
 		restoreAgent = function(agent) {
-			browser()
 			agent$id <- paste0("a",self$agentIDSeq)
 			self$addAgent(agent)
 		},
