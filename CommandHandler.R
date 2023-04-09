@@ -66,6 +66,11 @@ CommandHandler <- R6Class(
 					isValid=F
 				))
 			}
+			if(is.null(msg$action)) {
+				return(list(
+					isValid=F
+				))
+			}
 			list(
 				isValid=msg$action %in% self$commandNames
 			)
