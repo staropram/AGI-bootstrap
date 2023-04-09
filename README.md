@@ -17,7 +17,7 @@ Or sometimes chatgpt3.5 will mix a command with text. Usually you can just respo
 
 "send only json"
 
-And it will then send the correct command. It is on the tTODO list to try and figure out what it is trying to do.
+And it will then send the correct command. It is on the tTODO list to try and figure out what it is trying to do. chatgpt4 is unlikely to do this.
 
 
 # Config
@@ -79,9 +79,9 @@ The commands that have so far been defined are in the `commands` directory. Thes
 
 # TODO
 
-0. Save state and resume
 1. add `create_commmand` command
 2. add `create_function` command
 3. add `execute_function` command
 4. ChatGPT 3.5 likes to interject text outside of the JSON messages which is annoying and breaks command processing. So the command processing should be less fragile and deal with this in some sane manner.
 5. AI also liks to send command sequences in a single message so could create a command queue and handle this.
+6. Make sure each command can print itself

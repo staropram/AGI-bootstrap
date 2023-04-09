@@ -19,15 +19,49 @@ load_initial_prompt <- function() {
 
 initial_prompt <- load_initial_prompt()
 
+# check if a previous state exists
+existingStateFile <- paste0(
+	config$runtimeDirPrefix,"/",config$aiName,"/a0.rds"
+)
+# if it does, ask to restore
+restoreState <- F
+if(file.exists(existingStateFile)) {
+	answer <- readline(paste0("Would you like to restore state for AI \"",config$aiName,"\"? (y/n) : "))
+	if(answer=="y") {
+		restoreState <- T
+		# we do not want to clean the working directory
+		# if we are restoring the state, so override this
+		config$cleanWorkingDir <- F
+	}
+}
+
+# create the command handler (this also sets up the
+# working directory)
 commandHandler <- CommandHandler$new(config)
 
-# create agent manager and add a new default agent
+# create agent manager 
 agentManager <- AgentManager$new(config)
-a0 <- agentManager$newAgent()
 
-# get the initial response
-agi_response <- a0$chat(initial_prompt)
+# if we are restoring the state we need to load the agent
+# and tell the manager
+if(restoreState) {
+	# note that load puts the object back to the same
+	# name it was stored under
+	load(existingStateFile)
+	agentManager$restoreAgent(a0)
+	# we want to send an initial prompt which
+	# tells the AI to continue in this case
+	agi_response <- a0$chat("Your state has been restored since you were last ran, please continue.")
+} else {
+	# otherwise we create a new agent
+	a0 <- agentManager$newAgent()
+	# and send the initial response
+	agi_response <- a0$chat(initial_prompt)
+}
 
+
+# this whole area of the code is pissing me off
+# needs abstracting
 while(T) {
 	# extract the command
 	msgRaw <- agi_response$msg
@@ -64,6 +98,9 @@ while(T) {
 	} else {
 		# print the action and comment for us to read
 		print(paste("Requested action:",msg))
+		if(msg$action=="exit") {
+			break
+		}
 		a <- "z"
 		while(a!="i") {
 			if(config$continuous==T) {
@@ -88,4 +125,7 @@ while(T) {
 	print(action_msg)
 	agi_response <- a0$chat(action_msg)
 
+	# save state, this will need managing separately
+	# at some point, at the moment we just save a0 
+	save(a0,file=existingStateFile)
 }

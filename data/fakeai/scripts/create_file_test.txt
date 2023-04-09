@@ -2,4 +2,4 @@
 {"action":"show_command_source","command_name":"list_commands","comment":"Examining list_commands source code"}
 {"action":"write_file","fn":"test.R","content":"testFunction <- function() { print(\"Cool\") }\ntestFunction()","commment":"Writing a simple test function"}
 {"action":"source_r_file","fn":"test.R","comment":"calling simple test function"}
-exit
+{"action":"exit"}
