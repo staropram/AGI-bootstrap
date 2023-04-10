@@ -106,3 +106,5 @@ Testing is done using the "fakegpt" chat interface.
 11. Probably want to pass commands onto other agents, think about retrieving html from a URL, we can just get another agent to parse it and return a summary, we could write a command for this or the AI could ask for the result of the command to be piped to the agent. Also an agent should be able to execute commands itself, so we need to make sure responses goto the correct agent
 12. "shiny" interface for pretty outputs and code formatting etc
 13. `read_lines`,`modify_lines`, so can do partial editing
+14. return number of tokens left in responses
+15. paramaterize the read_url with chatgpt summary function
