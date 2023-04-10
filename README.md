@@ -92,6 +92,7 @@ Testing is done using the "fakegpt" chat interface.
 
 # TODO
 
+0. `retrieve_url` - option for a new agent to summarise
 1. add `create_commmand` command
 2. add `create_function` command
 3. add `execute_function` command
@@ -102,3 +103,4 @@ Testing is done using the "fakegpt" chat interface.
 8. AI needs to be able to reflect on all the source code, not just the commands.
 9. It is relatively easy to exceed the maximum context length. I think we need to ask the AI to compress it's context periodically
 10. It might make sense to make the commands an R package so they have a namespace
+11. Probably want to pass commands onto other agents, think about retrieving html from a URL, we can just get another agent to parse it and return a summary, we could write a command for this or the AI could ask for the result of the command to be piped to the agent. Also an agent should be able to execute commands itself, so we need to make sure responses goto the correct agent
