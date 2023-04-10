@@ -1,7 +1,7 @@
 config <- list(
-	chatType="fakegpt",
-	#chatType="chatgpt",
-	aiName="test1",
+	#chatType="fakegpt",
+	chatType="chatgpt",
+	aiName="test0",
 	runtimeDirPrefix="runtime",
 	initialPrompt="agi_prompt_v0.1.txt",
 	continuous=F,
