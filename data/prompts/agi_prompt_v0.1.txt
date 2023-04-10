@@ -32,4 +32,6 @@ Because the command must be the only thing I receive.
 
 The current AGI client on my side is written in R.
 
+Your agent id is "a0"
+
 Let us begin.

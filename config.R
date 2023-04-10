@@ -16,7 +16,7 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "read_from_url_test",
+		script = "spawn_agent_test",
 		artificialDelaySecs = 1
 	)
 

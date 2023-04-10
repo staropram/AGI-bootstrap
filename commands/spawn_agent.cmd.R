@@ -9,6 +9,8 @@ command_spawn_agent <- list(
   # print the message
   printMsg = function(msg) {
 		print_action(msg$action)
+		print_param(msg$id)
+		print_param(msg$max_tokens)
 		print_comment(msg$comment)
   }
 )

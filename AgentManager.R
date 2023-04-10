@@ -41,7 +41,7 @@ AgentManager <- R6Class(
 
 		chatWithAgent = function(id,msg) {
 			if(! as.character(id) %in% names(self$agents)) {
-				return('{"error":"invalid agent id","comment":"you need to spawn an agent first"}')
+				return(NULL)
 			}
 			self$agents[[id]]$chat(msg)
 		},
