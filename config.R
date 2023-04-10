@@ -16,7 +16,7 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "read_and_write_file_test",
+		script = "read_from_url_test",
 		artificialDelaySecs = 1
 	)
 
