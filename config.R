@@ -15,7 +15,7 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "google_search_test",
+		script = "list_files_test",
 		artificialDelaySecs = 1
 	)
 

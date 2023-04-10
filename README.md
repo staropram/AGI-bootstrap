@@ -97,3 +97,4 @@ Testing is done using the "fakegpt" chat interface.
 7. Probably should group commands and allow multiple endpoints per command to increase coupling.
 8. AI needs to be able to reflect on all the source code, not just the commands.
 9. It is relatively easy to exceed the maximum context length. I think we need to ask the AI to compress it's context periodically
+10. It might make sense to make the commands an R package so they have a namespace

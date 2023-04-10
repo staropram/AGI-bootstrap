@@ -9,7 +9,7 @@ Agent <- R6Class(
 		workingDir = "",
 
 		initialize = function(config,id) {
-			self$id <- paste0("a",id)
+			self$id <- id
 			self$gptInterface <- GPTInterface$new(self,config)
 			self$config <- config
 			self$workingDir <- paste0(
