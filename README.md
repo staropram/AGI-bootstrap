@@ -92,7 +92,7 @@ Testing is done using the "fakegpt" chat interface.
 
 # TODO
 
-0. `retrieve_url` - option for a new agent to summarise
+0. Need ability to keep track of own context length and modify or summarize past context to stay within context window.
 1. add `create_commmand` command
 2. add `create_function` command
 3. add `execute_function` command

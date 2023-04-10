@@ -50,6 +50,18 @@ AgentManager <- R6Class(
 			agent <- Agent$new(self$config,paste0("a",self$agentIDSeq))
 			self$addAgent(agent)
 			agent
+		},
+
+		# sets the message context back to nothing
+		# so the agent can be reused
+		resetMessages = function(id) {
+			self$agents[[id]]$resetMessages()
+		},
+
+		# deletes the specified agent
+		deleteAgent = function(id) {
+			self$agents[id] <- NULL
+			self$agentCount <- self$agentCount - 1
 		}
 
 	)

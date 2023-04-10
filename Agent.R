@@ -25,6 +25,10 @@ Agent <- R6Class(
 			)))
 		},
 
+		resetMessages = function() {
+			self$messages <- list()
+		},
+
 		chat = function(msg) {
 			self$gptInterface$chat(msg)
 		}
