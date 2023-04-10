@@ -7,7 +7,7 @@ command_read_file <- list(
 	 if(!file.exists(args$fn)) {
 		return('{"error":"file does not exist"}')
 	 }
-    content <- readLines(args$fn)
+    content <- paste0(readLines(args$fn),collapse="\n")
     paste0('{"status" = "ok", "content" = "',content,'"}')
   },
 

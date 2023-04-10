@@ -1,5 +1,6 @@
 config <- list(
-	chatType="chatgpt",
+	chatType="fakegpt",
+	#chatType="chatgpt",
 	aiName="test1",
 	runtimeDirPrefix="runtime",
 	initialPrompt="agi_prompt_v0.1.txt",
@@ -15,7 +16,7 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "list_files_test",
+		script = "read_and_write_file_test",
 		artificialDelaySecs = 1
 	)
 
