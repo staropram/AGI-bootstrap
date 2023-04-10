@@ -82,6 +82,10 @@ config <- list(
 
 The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation.
 
+# Notes
+
+You might want to disable certain commands. Personally, I'm interested in seeing it try and figure things out for itself. If you give it the ability to search the internet and spawn agents, it just uses them all the time, which is a bit lame as it doesn't really need to. I want to know what the LLM is intrinsically capable of.
+
 # Testing
 
 Testing is done using the "fakegpt" chat interface.
