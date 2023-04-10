@@ -132,7 +132,7 @@ extract_content <- function(text) {
 
 command_read_from_url <- list(
   active = T,
-  author = "human",
+  author = "human and AI",
   usage = '{"action":"read_from_url","url":"url","comment","chatgpt_summarize":"true/false",:"Reads the contents of the specified URL. If chatgpt_summarize is true, new chatgpt agents will be spawned (as necessary) to summarize the contents and this summary will be returned rather than the raw content."}',
 
   f = function(args) {
@@ -151,7 +151,7 @@ command_read_from_url <- list(
 
       # If chatgpt_summarize is TRUE, send the content to a ChatGPT agent for summarization
       if (chatgpt_summarize) {
-			summary <- summarize_long_text(clean_content,total_max_tokens=500,chunk_size=2048)
+			summary <- summarize_long_text(clean_content,total_max_tokens=500,chunk_size=1500)
         return(summary)
       } else {
         return(clean_content)
