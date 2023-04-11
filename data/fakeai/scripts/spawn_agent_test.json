@@ -1,5 +1,5 @@
 {"commands":[
-{"action":"spawn_agent", "id":"clara","comment":"spawning a new agent"},
+{"action":"spawn_agent", "id":"clara","max_tokens":"300","comment":"spawning a new agent"},
 {"action":"chat_with_agent","id":"clara","msg":"what is the heaviest fruit?","comment":"asking agent a question"},
 {"action":"chat_with_agent","id":"clara","msg":"but is it tasty?","comment":"asking agent a follow-up question"},
 {"action":"exit"}

@@ -9,12 +9,5 @@ command_read_file <- list(
 	 }
     content <- paste0(readLines(args$fn),collapse="\n")
     paste0('{"status" = "ok", "content" = "',content,'"}')
-  },
-
-  # print the message
-  printMsg = function(msg) {
-		print_action(msg$action)
-		print_param("fn",msg$fn)
-		print_comment(msg$comment)
   }
 )

@@ -8,12 +8,5 @@ command_source_r_file <- list(
 		}
 		op <- capture.output(source(args$fn))
 		paste(op,collapse="")
-	},
-
-	# print the message
-	printMsg=function(msg) {
-		print_action(msg$action)
-		print_param("fn",msg$fn)
-		print_comment(msg$comment)
 	}
 )

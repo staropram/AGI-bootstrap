@@ -7,12 +7,5 @@ command_ask_for_user_input <- list(
 		print(args$query)
 		cat("\"\n")
 		readline("Please respond: ")
-	},
-
-	# print the message
-	printMsg=function(msg) {
-		print_action(msg$action)
-		print_param("query",msg$query)
-		print_comment(msg$comment)
 	}
 )

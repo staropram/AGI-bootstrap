@@ -160,14 +160,6 @@ command_read_from_url <- list(
       error_json <- list(error = "Error: Failed to fetch the content from the specified URL.")
       return(toJSON(error_json, auto_unbox = TRUE))
     }
-  },
-
-  # print the message
-  printMsg = function(msg) {
-		print_action(msg$action)
-		print_param("url",msg$url)
-		print_param("chatgpt_summarize",msg$chatgpt_summarize)
-		print_comment(msg$comment)
   }
 )
 

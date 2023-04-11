@@ -52,15 +52,6 @@ command_google_search <- list(
     output <- format_google_results(results)
     
     return(paste0('{"status":"ok","output":"',output,'"}'))
-  },
-
-  # Print the message
-   printMsg = function(msg) {
-      print_action(msg$action)
-      print_param("query",msg$query)
-      print_param("start",msg$start)
-      print_param("num",msg$num)
-		print_comment(msg$comment)
   }
 )
 

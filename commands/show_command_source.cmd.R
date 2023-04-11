@@ -11,13 +11,6 @@ command_show_command_source <- list(
 		content <- paste(readLines(f),collapse="\n")
 		close(f)
 		content
-	},
-
-	# print the message
-	printMsg=function(msg) {
-		print_action(msg$action)
-		print_param("command_name",msg$command_name)
-		print_comment(msg$comment)
 	}
 )
 

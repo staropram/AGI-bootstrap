@@ -85,7 +85,21 @@ CommandHandler <- R6Class(
 		},
 
 		printMsg = function(msg) {
-			self$commands[[msg$action]]$printMsg(msg)
+			# create a default
+			cmd <- self$commands[[msg$action]]
+			if("printMsg" %in% names(cmd)) {
+				# print method override
+				cmd$printMsg(msg)
+			} else {
+				# default print method
+				print_action(msg$action)
+				paramNames <- names(msg)[!names(msg) %in% c("action","comment")]
+				# print params
+				for(p in paramNames) {
+					print_param(p,msg[[p]])
+				}
+				print_comment(msg$comment)
+			}
 		}
 	)
 )

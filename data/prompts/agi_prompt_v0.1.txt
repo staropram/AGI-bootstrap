@@ -28,7 +28,7 @@ This is not a correctly formatted command:
 
 'Apologies I'll try again please execute this: {"action":"list_commands"}'
 
-Because the command must be the only thing I receive.
+You must send exactly one command per response and only send a command.
 
 The current AGI client on my side is written in R.
 
