@@ -62,6 +62,14 @@ AgentManager <- R6Class(
 		deleteAgent = function(id) {
 			self$agents[id] <- NULL
 			self$agentCount <- self$agentCount - 1
+		},
+
+		getTokensUsed = function(id) {
+			if(! id %in% names(self$agents)) {
+				return('{"error":"invalid agent id"}')
+			}
+			tokens <- self$agents[[id]]$tokensUsed
+			paste0('{"tokens_used":"',tokens,'"}')
 		}
 
 	)

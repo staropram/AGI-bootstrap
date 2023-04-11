@@ -7,6 +7,7 @@ Agent <- R6Class(
 		gptInterface = NULL,
 		config = NULL,
 		workingDir = "",
+		tokensUsed = 0,
 
 		initialize = function(config,id) {
 			self$id <- id
@@ -30,7 +31,17 @@ Agent <- R6Class(
 		},
 
 		chat = function(msg) {
-			self$gptInterface$chat(msg)
+			if(self$config$trackTokens) {
+				# every message we send would have to be
+				# formatted correctly too, for us 
+				# to track tokens, maybe just get the
+				# AI to ask how many tokens
+				#msg$tokens_used <- self$tokensUsed
+				# XXX
+			}
+			response <- self$gptInterface$chat(msg)
+			self$tokensUsed <- response$apiResponse$usage$total_tokens
+			response
 		}
 	)
 )

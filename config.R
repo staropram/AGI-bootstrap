@@ -6,6 +6,7 @@ config <- list(
 	initialPrompt="agi_prompt_v0.1.txt",
 	continuous=F,
 	cleanWorkingDir=T,
+	trackTokens=F, # not implemented yet, but leave here
 
 	# ChatGPT options
 	chatgpt = list(
