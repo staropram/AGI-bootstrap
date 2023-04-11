@@ -1,0 +1,78 @@
+{ "commands":[
+   {
+  "action": "list_commands",
+  "comment": "getting list of commands to build my AGI"
+},
+   {
+  "action": "show_command_source",
+  "command_name": "list_commands",
+  "comment": "Examining list_commands source code"
+},
+   {
+  "action": "write_file",
+  "fn": "test.R",
+  "content": "testFunction <- function() { print(\"Cool\") }\ntestFunction()",
+  "commment": "Writing a simple test function"
+},
+   {
+  "action": "source_r_file",
+  "fn": "test.R",
+  "comment": "calling simple test function"
+},
+   {
+  "action": "google_search",
+  "query": "AGI reinforcement learning algorithms",
+  "start": 1,
+  "num": 5,
+  "comment": "I need to research and learn about reinforcement learning algorithms that can help me improve my performance on tasks."
+},
+   {
+  "action": "list_files",
+  "comment": "I need to list files to see what is available"
+},
+   {
+  "action": "write_file",
+  "fn": "test.txt",
+  "content": "Testing testing 123\ntesting 123",
+  "comment": "Creating a file with test content"
+},
+   {
+  "action": "read_file",
+  "fn": "test.txt",
+  "comment": "Reading the content back in"
+},
+   {
+  "action": "read_from_url",
+  "url": "https://en.wikipedia.org/wiki/Bannana",
+  "chatgpt_summarize": "false",
+  "comment": "reading some random page about spiders"
+},
+   {
+  "action": "read_from_url",
+  "url": "https://en.wikipedia.org/wiki/Bannana",
+  "chatgpt_summarize": "true",
+  "comment": "reading some random page about spiders, asking chatgpt to summarize"
+},
+   {
+  "action": "spawn_agent",
+  "id": "clara",
+  "max_tokens": "300",
+  "comment": "spawning a new agent"
+},
+   {
+  "action": "chat_with_agent",
+  "id": "clara",
+  "msg": "what is the heaviest fruit?",
+  "comment": "asking agent a question"
+},
+   {
+  "action": "chat_with_agent",
+  "id": "clara",
+  "msg": "but is it tasty?",
+  "comment": "asking agent a follow-up question"
+},
+   {
+  "action": "exit"
+}
+
+]}
