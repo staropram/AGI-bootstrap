@@ -92,6 +92,8 @@ Testing is done using the "fakegpt" chat interface.
 
 # TODO
 
+Going to rewrite the message system entirely so that everyone is an agent, and I'm not going to use JSON as it wastes too many tokens, need something compact.
+
 0. Need ability to keep track of own context length and modify or summarize past context to stay within context window.
 1. add `create_commmand` command
 2. add `create_function` command
@@ -108,3 +110,5 @@ Testing is done using the "fakegpt" chat interface.
 13. `read_lines`,`modify_lines`, so can do partial editing
 14. return number of tokens left in responses
 15. paramaterize the read_url with chatgpt summary function
+16. every msg must have a to and from id. Might make sense to have a Router object that handles that and a HumanAgent class so you could in theory have multiple humans
+17. Need a warning when context gets too big to clean it out or compress it
