@@ -1,10 +1,22 @@
 command_chat_with_agent <- list(
 	active = T,
 	author = "human",
-	usage = '{"action":"chat_with_agent","to_id":"agent_id",from_id="from","msg":"message","comment":"Send message to a human or chatGPT agent with id=agent_id, including all previous messages in conversation. Returns the response."}',
-	f = function(args) {
-		response <- agentManager$chatWithAgent(args$id,args$msg)
+
+	usage = list(
+		action="chat_with_agent",
+		from="src_id",
+		to="dst_id",
+		msg="message"
+	),
+										 
+	description="Send message from agent with src_id to agent with dst_id. Returns the response.",
+
+	f = function(cmdMsg) {
+		# send the message to the agent
+		response <- agentManager$chatWithAgent(cmdMsg)
+		browser()
 		if(is.null(response)) {
+			# need to encode
 			return('{"error":"invalid agent id","comment":"you need to spawn an agent first"}')
 		}
 		# extract the message

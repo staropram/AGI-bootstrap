@@ -9,7 +9,7 @@ CommandHandler <- R6Class(
 		commandNames = NULL,
 		workingDir = "",
 		commandFiles = NULL,
-		commandFormat = NULL,
+		commandEncoding = NULL,
 		transcoders = list(),
 
 		initialize = function(config) {
@@ -18,7 +18,7 @@ CommandHandler <- R6Class(
 				config$runtimeDirPrefix,"/",
 				config$aiName
 			)
-			self$commandFormat = config$commandFormat
+			self$commandEncoding = config$commandEncoding
 
 			self$commandNames <- config$commands
 			self$commandFiles <- paste0(self$commandNames,".cmd.R")
@@ -75,6 +75,9 @@ CommandHandler <- R6Class(
 			}
 		},
 
+		# determines if a message is valid or not
+		# returns a list because we might want to
+		# add additional things in here in the future
 		validate = function(msg) {
 			if(is.null(msg)) {
 				return(list(
@@ -91,11 +94,33 @@ CommandHandler <- R6Class(
 			)
 		},
 
-		execute = function(msg) {
-			currentDir <- getwd()
-			setwd(self$workingDir)
-			output <- self$commands[[msg$action]]$f(msg)
-			setwd(currentDir)
+		# this receives an encoded message from any agent
+		# and must attempt to decode the message and
+		# properly handle it
+		handleCommand = function(rawMsg) {
+			# attempt to decode the message
+			cmdDecoded <- self$decodeCommand(rawMsg)
+			# if we cannot decode
+			if(!cmdDecoded$success) {
+				# pass back to the first human agent
+				# XXX
+			}
+			# attempt to validate the command
+			msgValidation <- self$validate(cmdDecoded$msg)
+			# if the message is not valid
+			if(!msgValidation$isValid) {
+				# XXX
+			}
+
+			# execute the message
+			self$execute(cmdDecoded$msg)
+		},
+
+		execute = function(cmdMsg) {
+
+			print("execute")
+			browser()
+			output <- self$commands[[cmdMsg$action]]$f(cmdMsg)
 			output
 		},
 
@@ -118,12 +143,12 @@ CommandHandler <- R6Class(
 		},
 
 		# encodes a command in the specified command format
-		encodeCommand = function(msg,fmt=self$messageFormat) {
+		encodeCommand = function(msg,fmt=self$commandEncoding) {
 			self$transcoders[[fmt]]$encode(msg)
 		},
 
 		# encodes a command in the specified command format
-		decodeCommand = function(msg,fmt=self$messageFormat) {
+		decodeCommand = function(msg,fmt=self$commandEncoding) {
 			self$transcoders[[fmt]]$decode(msg)
 		}
 	)

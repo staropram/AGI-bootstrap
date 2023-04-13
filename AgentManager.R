@@ -14,6 +14,7 @@ AgentManager <- R6Class(
 			self$agents[[agent$id]] <- agent 
 			self$agentIDSeq <- self$agentIDSeq + 1
 			self$agentCount <- self$agentCount + 1
+			agent
 		},
 
 		# if we are restoring the agent we need to
@@ -29,6 +30,7 @@ AgentManager <- R6Class(
 			id <- paste0("h",self$agentIDSeq)
 			agent <- HumanAgent$new(id)
 			self$addAgent(agent)
+			agent
 		},
 
 		spawnAgent = function(max_tokens) {
@@ -45,11 +47,12 @@ AgentManager <- R6Class(
 			agent$id
 		},
 
-		chatWithAgent = function(id,msg) {
-			if(! as.character(id) %in% names(self$agents)) {
+		chatWithAgent = function(msg) {
+			if(! as.character(msg$to) %in% names(self$agents)) {
 				return(NULL)
 			}
-			self$agents[[id]]$chat(msg)
+			agent <- self$agents[[msg$to]]
+			agent$chat(msg)
 		},
 
 		newAgent = function() {

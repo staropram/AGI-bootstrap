@@ -9,9 +9,10 @@ config <- list(
 	trackTokens=F, # not implemented yet, but leave here
 
 	# commands available to AI
-	commandFormat = "JSON",
+	commandEncoding = "JSON",
 	commands = list(
-		"list_commands"
+		"list_commands",
+		"chat_with_agent"
 	),
 
 	# ChatGPT options
@@ -23,7 +24,7 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "all_tests",
+		script = "chat_test",
 		artificialDelaySecs = 1
 	)
 

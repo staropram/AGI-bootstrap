@@ -9,11 +9,11 @@ FakeAI <- R6Class(
 			self$config <- config
 			# legacy
 			#self$script <- loadJSONScript(config$fakegpt$script)
-			self$script <- loadRScript(config$fakegpt$script)
+			self$script <- self$loadRScript(config$fakegpt$script)
 		},
 
 		loadJSONScript = function(scriptName) {
-			fn <- paste0("file://data/fakeai/scripts/",scriptName,".json")
+			fn <- paste0(config$rootDir,"/data/fakeai/scripts/",scriptName,".json")
 			# load the script
 			scriptRaw <- readLines(fn)
 
@@ -28,20 +28,30 @@ FakeAI <- R6Class(
 		},
 
 		loadRScript = function(scriptName) {
-			fn <- paste0("data/fakeai/scripts/",scriptName,".R")
+			fn <- paste0(config$rootDir,"/data/fakeai/scripts/",scriptName,".R")
 			source(fn)
 			scriptDataName <- paste0("script_",scriptName)
 			self$script <- get(scriptDataName)
 		},
 
 		chat = function(msg) {
+			print("received: ")
+			print(msg)
 			# we don't care about the message as we
 			# just issue a fixed sequence of commands
 			self$scriptIndex <- self$scriptIndex + 1
 			if(self$scriptIndex==(length(self$script)+1)) {
 				self$scriptIndex <- 1
 			}
-			self$script[[self$scriptIndex]]
+			response <- future({
+				commandHandler$encodeCommand(self$script[[self$scriptIndex]])
+			})
+			
+			response %...>% (function(r) {
+				  commandHandler$handleCommand(r)
+			})
+				#commandHandler$encodeCommand(response)
+			#)
 		}
 	)
 )

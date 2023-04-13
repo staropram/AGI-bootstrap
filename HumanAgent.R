@@ -9,9 +9,16 @@ HumanAgent <- R6Class(
 		},
 
 		chatWithAgent = function(id,msg) {
-			commandHandler.chatWithAgent(id,msg)
+			cmdMsg <- list(
+				from=self$id,
+				to=id,
+				action="chat_with_agent",
+				msg=msg
+			)
+			commandHandler$handleCommand(
+				commandHandler$encodeCommand(cmdMsg)
+			)
 		},
-
 
 		# this is called by other agents when they
 		# want to chat with us, also by default

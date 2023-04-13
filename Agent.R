@@ -30,8 +30,9 @@ Agent <- R6Class(
 			self$messages <- list()
 		},
 
-		chat = function(msg) {
-			response <- self$gptInterface$chat(msg)
+		chat = function(cmdMsg) {
+			encodedMsg <- commandHandler$encodeCommand(cmdMsg)
+			response <- self$gptInterface$chat(encodedMsg)
 			self$tokensUsed <- response$apiResponse$usage$total_tokens
 			if(self$config$trackTokens) {
 				response$msg$tokens <- self$tokensUsed

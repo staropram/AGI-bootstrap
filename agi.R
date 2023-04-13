@@ -1,14 +1,23 @@
 library(openai)
 library(R6)
 library(jsonlite)
+library(promises)
+library(future)
+plan(multicore)
 
-# if last run had an error whilst directory was changed 
-# and we're in the runtime dir change it back to the root
-setwd(strsplit(getwd(), "/runtime")[[1]][1])
+source("config.R")
+
+# first time we run keep track of root directory
+if(!exists("config$rootDir")) {
+	config$rootDir <- getwd()
+}
+# it's possible an error occurred while we were in
+# the working directory so switch back to global root
+setwd(config$rootDir)
 
 source('color_output.R')
 
-source("config.R")
+source("FakeAI.R")
 source("Agent.R")
 source("HumanAgent.R")
 source("AgentManager.R")
@@ -22,9 +31,14 @@ load_initial_prompt <- function() {
 
 initial_prompt <- load_initial_prompt()
 
+# set the runtime dir in the config so that
+# other functions can use it
+config$runtimeDir <- paste0(config$runtimeDirPrefix,"/",config$aiName)
+
+
 # check if a previous state exists
 existingStateFile <- paste0(
-	config$runtimeDirPrefix,"/",config$aiName,"/a0.rds"
+	config$runtimeDir,"/",config$aiName,".rds"
 )
 # if it does, ask to restore
 restoreState <- F
@@ -55,23 +69,23 @@ if(restoreState) {
 	# note that load puts the object back to the same
 	# name it was stored under
 	load(existingStateFile)
-	agentManager$restoreAgent(a0)
+	agentManager$restoreAgent(primaryAgent$id)
 	# we want to send an initial prompt which
 	# tells the AI to continue in this case
-	humanAgent$chatWithAgent("a0","Your state has been restored since you were last ran, please continue.")
+	humanAgent$chatWithAgent(primaryAgent$id,"Your state has been restored since you were last ran, please continue.")
 } else {
 	# otherwise we create a new agent
-	a0 <- agentManager$newAgent()
+	primaryAgent <- agentManager$newAgent()
 	# and send the initial prompt
-	humanAgent$chatWithAgent(a0$id,initial_prompt)
+	humanAgent$chatWithAgent(primaryAgent$id,initial_prompt)
 }
-
 
 # this whole area of the code is pissing me off
 # needs abstracting. Can be done via a HumanAgent
-while(T) {
+
+while(F) {
 	# extract the command
-	msgRaw <- a0_response$msg
+	msgRaw <- primaryAgent_response$msg
 	browser()
 	if(msgRaw=="exit") {
 		break
@@ -131,9 +145,9 @@ while(T) {
 
 	print(action_msg)
 	# make sure the response goes to the correct agent
-	a0_response <- a0$chat(action_msg)
+	primaryAgent_response <- primaryAgent$chat(action_msg)
 
 	# save state, this will need managing separately
-	# at some point, at the moment we just save a0 
-	save(a0,file=existingStateFile)
+	# at some point, at the moment we just save primaryAgent 
+	save(primaryAgent,file=existingStateFile)
 }
