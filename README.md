@@ -78,9 +78,9 @@ config <- list(
 | `script`| the script to run |
 | `artificialDelaySecs` | adds an artifical delay so you can read the responses rather than it all happening in a blur. |
 
-# Adding commands
+# Commands
 
-The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation.
+The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation. You can disable a command by changing the `active` flag in the command file to `F`.
 
 # Notes
 

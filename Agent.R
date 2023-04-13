@@ -31,16 +31,11 @@ Agent <- R6Class(
 		},
 
 		chat = function(msg) {
-			if(self$config$trackTokens) {
-				# every message we send would have to be
-				# formatted correctly too, for us 
-				# to track tokens, maybe just get the
-				# AI to ask how many tokens
-				#msg$tokens_used <- self$tokensUsed
-				# XXX
-			}
 			response <- self$gptInterface$chat(msg)
 			self$tokensUsed <- response$apiResponse$usage$total_tokens
+			if(self$config$trackTokens) {
+				response$msg$tokens <- self$tokensUsed
+			}
 			response
 		}
 	)

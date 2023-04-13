@@ -34,4 +34,6 @@ The current AGI client on my side is written in R.
 
 Your agent id is "a0"
 
+I am a human agent with id "h0"
+
 Let us begin.

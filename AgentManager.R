@@ -24,17 +24,23 @@ AgentManager <- R6Class(
 			self$addAgent(agent)
 		},
 
-		spawnAgent = function(id,max_tokens) {
+		spawnHuman = function() {
+			print("A")
+			id <- paste0("h",self$agentIDSeq)
+			agent <- HumanAgent$new(id)
+			self$addAgent(agent)
+		},
+
+		spawnAgent = function(max_tokens) {
 			# can override agent options here if needed
 			# just chatgpt agent for now
 			conf <- self$config
 			conf$chatType <- "chatgpt"
-			conf$aiName <- id
 			conf$runtimeDirPrefix <- "runtime"
 			conf$continuous <- T
 			conf$cleanWorkingDir <- F
 			conf$chat_gpt$max_tokens <- max_tokens
-			agent <- Agent$new(conf,id)
+			agent <- Agent$new(conf,paste0("a",self$agentIDSeq))
 			self$addAgent(agent)
 			agent$id
 		},

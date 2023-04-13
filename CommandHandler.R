@@ -1,3 +1,4 @@
+source("MessageTranscoder.R")
 # load the commands
 CommandHandler <- R6Class(
 	"CommandHandler",
@@ -7,7 +8,9 @@ CommandHandler <- R6Class(
 		commandList = NULL,
 		commandNames = NULL,
 		workingDir = "",
-		commandFiles=NULL,
+		commandFiles = NULL,
+		commandFormat = NULL,
+		transcoders = list(),
 
 		initialize = function(config) {
 			self$config <- config
@@ -15,8 +18,10 @@ CommandHandler <- R6Class(
 				config$runtimeDirPrefix,"/",
 				config$aiName
 			)
+			self$commandFormat = config$commandFormat
 
-			self$commandFiles <-list.files("commands",pattern="*.cmd.R")
+			self$commandNames <- config$commands
+			self$commandFiles <- paste0(self$commandNames,".cmd.R")
 
 			# create directory if necessary
 			if(!dir.exists(self$workingDir)) {
@@ -30,34 +35,44 @@ CommandHandler <- R6Class(
 			}
 
 			# copy the base commands into the runtime dir
-			for(f in self$commandFiles) {
-				file.copy(paste0("commands/",f),self$workingDir,overwrite=T)
+			for(fn in self$commandFiles) {
+				fromFN <- paste0("commands/",fn)
+				toFN <- self$workingDir
+				file.copy(fromFN,toFN,overwrite=T)
 			}
 
+			# load the commmands
 			self$loadCommands()
+
+			# load the command transcoders
+			self$loadTranscoders()
 		},
 
 		loadCommands = function() {
-			self$commands <- lapply(self$commandFiles,function(fn) {
-				cmd_name <- sub("\\.cmd\\.R$", "", fn)
+			self$commands <- lapply(self$commandNames,function(cmdName) {
+				fn <- paste0(cmdName,".cmd.R")
 				source(paste0(self$workingDir,"/",fn))
-				file_content <- get(paste0("command_",cmd_name))
+				file_content <- get(paste0("command_",cmdName))
 				sc <- list()
-				sc[[cmd_name]] <- file_content
-				get(paste0("command_",cmd_name))
+				sc[[cmdName]] <- file_content
+				get(paste0("command_",cmdName))
 			})
-			names(self$commands) <- sub("\\.cmd\\.R$","",self$commandFiles)
+			names(self$commands) <- self$commandNames
 			self$commandList <- lapply(self$commands,function(cmd) {
-				if(!cmd$active) {
-					return(NULL)
-				}
 				cmd$usage 
 			})
-			# remove inactives, xxx not sure we should do this
-			# maybe just keep track of which are active dynamically
-			self$commandList <- Filter(Negate(is.null),self$commandList)
+		},
 
-			self$commandNames <- names(self$commands)
+		loadTranscoders = function() {
+			for(fn in list.files("transcoders")) {
+				# source file
+				source(paste0("transcoders/",fn))
+				
+				# initialize
+				constructor <- paste0(gsub("\\.R","",fn),"$new()")
+				trans <- eval(str2expression(constructor))
+				self$transcoders[[trans$name]] <- trans
+			}
 		},
 
 		validate = function(msg) {
@@ -100,6 +115,16 @@ CommandHandler <- R6Class(
 				}
 				print_comment(msg$comment)
 			}
+		},
+
+		# encodes a command in the specified command format
+		encodeCommand = function(msg,fmt=self$messageFormat) {
+			self$transcoders[[fmt]]$encode(msg)
+		},
+
+		# encodes a command in the specified command format
+		decodeCommand = function(msg,fmt=self$messageFormat) {
+			self$transcoders[[fmt]]$decode(msg)
 		}
 	)
 )

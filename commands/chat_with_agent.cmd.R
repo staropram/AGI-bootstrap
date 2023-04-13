@@ -1,7 +1,7 @@
 command_chat_with_agent <- list(
 	active = T,
 	author = "human",
-	usage = '{"action":"chat_with_agent","id":"agent_id","msg":"message","comment":"Send message to a chatGPT agent with id=agent_id, including all previous messages in conversation. Returns the chatGPTs response."}',
+	usage = '{"action":"chat_with_agent","to_id":"agent_id",from_id="from","msg":"message","comment":"Send message to a human or chatGPT agent with id=agent_id, including all previous messages in conversation. Returns the response."}',
 	f = function(args) {
 		response <- agentManager$chatWithAgent(args$id,args$msg)
 		if(is.null(response)) {

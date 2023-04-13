@@ -10,6 +10,7 @@ source('color_output.R')
 
 source("config.R")
 source("Agent.R")
+source("HumanAgent.R")
 source("AgentManager.R")
 source("CommandHandler.R")
 
@@ -44,7 +45,11 @@ commandHandler <- CommandHandler$new(config)
 # create agent manager 
 agentManager <- AgentManager$new(config)
 
+# create the main human agent
+humanAgent <- agentManager$spawnHuman()
+
 # if we are restoring the state we need to load the agent
+# (future: all the agents, starting with the human agent)
 # and tell the manager
 if(restoreState) {
 	# note that load puts the object back to the same
@@ -53,20 +58,21 @@ if(restoreState) {
 	agentManager$restoreAgent(a0)
 	# we want to send an initial prompt which
 	# tells the AI to continue in this case
-	agi_response <- a0$chat("Your state has been restored since you were last ran, please continue.")
+	humanAgent$chatWithAgent("a0","Your state has been restored since you were last ran, please continue.")
 } else {
 	# otherwise we create a new agent
 	a0 <- agentManager$newAgent()
-	# and send the initial response
-	agi_response <- a0$chat(initial_prompt)
+	# and send the initial prompt
+	humanAgent$chatWithAgent(a0$id,initial_prompt)
 }
 
 
 # this whole area of the code is pissing me off
-# needs abstracting
+# needs abstracting. Can be done via a HumanAgent
 while(T) {
 	# extract the command
-	msgRaw <- agi_response$msg
+	msgRaw <- a0_response$msg
+	browser()
 	if(msgRaw=="exit") {
 		break
 	}
@@ -124,7 +130,8 @@ while(T) {
 	}
 
 	print(action_msg)
-	agi_response <- a0$chat(action_msg)
+	# make sure the response goes to the correct agent
+	a0_response <- a0$chat(action_msg)
 
 	# save state, this will need managing separately
 	# at some point, at the moment we just save a0 

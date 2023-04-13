@@ -39,13 +39,17 @@ GPTInterface <- R6Class(
 				"fakegpt" = self$chatFakeAI
 			)
 			apiResponse <- f(self$agent,msg)
-			list(
+			response <- list(
 				apiResponse = apiResponse,
 				msg=switch(self$type,
 					"chatgpt" = apiResponse$choices$message.content,
 					"fakegpt" = apiResponse
 				)
 			)
+			if(self$type=="fakegpt") {
+				response$apiResponse$usage <- list(total_tokens=1)
+			}
+			response
 		}
 	)
 )

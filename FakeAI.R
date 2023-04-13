@@ -7,7 +7,12 @@ FakeAI <- R6Class(
 
 		initialize = function(config) {
 			self$config <- config
-			scriptName <- config$fakegpt$script
+			# legacy
+			#self$script <- loadJSONScript(config$fakegpt$script)
+			self$script <- loadRScript(config$fakegpt$script)
+		},
+
+		loadJSONScript = function(scriptName) {
 			fn <- paste0("file://data/fakeai/scripts/",scriptName,".json")
 			# load the script
 			scriptRaw <- readLines(fn)
@@ -20,7 +25,13 @@ FakeAI <- R6Class(
 					NULL
 				}
 			)
-			self$script <- script$commands
+		},
+
+		loadRScript = function(scriptName) {
+			fn <- paste0("data/fakeai/scripts/",scriptName,".R")
+			source(fn)
+			scriptDataName <- paste0("script_",scriptName)
+			self$script <- get(scriptDataName)
 		},
 
 		chat = function(msg) {
@@ -30,7 +41,7 @@ FakeAI <- R6Class(
 			if(self$scriptIndex==(length(self$script)+1)) {
 				self$scriptIndex <- 1
 			}
-			toJSON(self$script[[self$scriptIndex]],auto_unbox=T)
+			self$script[[self$scriptIndex]]
 		}
 	)
 )
