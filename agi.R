@@ -1,3 +1,4 @@
+source("check_deps.R")
 library(openai)
 library(R6)
 library(jsonlite)
