@@ -3,9 +3,9 @@ command_chat <- list(
 	author = "human",
 
 	usage = list(
-		action="chat",
 		from="src_id",
 		to="dst_id",
+		action="chat",
 		msg="message"
 	),
 										 

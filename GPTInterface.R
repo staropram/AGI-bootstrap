@@ -19,6 +19,7 @@ GPTInterface <- R6Class(
 		chatOpenAI = function(agent,msg) {
 			encodedMsg <- commandHandler$encodeCommand(msg)
 			agent$appendMessage("user",encodedMsg)
+			print("chatting with openai")
 			completion <- future({create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,

@@ -1,7 +1,12 @@
 command_show_command_source <- list(
 	active=T,
 	author="human",
-	usage='{"action":"show_command_source","command_name":"name","comment":"Shows the R source for the specified command \"name\". The command has to be in the list of available commands."}',
+	usage=list(
+		action="show_command_source",
+		command_name="name",
+		comment="Shows the R source for the specified command \"name\"."
+	),
+
 	f=function(args) {
 		fn <- paste0(config$runtimeDir,"/",args$command_name,'.cmd.R')
 		if(!file.exists(fn)) {

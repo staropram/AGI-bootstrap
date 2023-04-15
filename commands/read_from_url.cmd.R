@@ -133,7 +133,12 @@ extract_content <- function(text) {
 command_read_from_url <- list(
   active = T,
   author = "human and AI",
-  usage = '{"action":"read_from_url","url":"url","comment","chatgpt_summarize":"true/false",:"Reads the contents of the specified URL. If chatgpt_summarize is true, new chatgpt agents will be spawned (as necessary) to summarize the contents and this summary will be returned rather than the raw content."}',
+  usage = list(
+		action="read_from_url",
+		url="url",
+		chatgpt_summarize="true/false",
+		comment="Reads the contents of the specified URL. If chatgpt_summarize is true, new chatgpt agents will be spawned (as necessary) to summarize the contents and this summary will be returned rather than the raw content."
+	),
 
   f = function(args) {
     url <- args$url

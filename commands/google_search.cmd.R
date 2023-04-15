@@ -43,7 +43,13 @@ format_google_results <- function(results) {
 command_google_search <- list(
   active = T,
   author = "AI",
-  usage = '{"action":"google_search","query":"search_query","start":1,"num":10,"comment":"Performs a Google search for the specified query and returns up to the specified number of results, starting from the specified index."}',
+  usage = list(
+  		action="google_search",
+		query="search_query",
+		start=1,
+		num=10,
+		comment="Performs a Google search for the specified query and returns up to the specified number of results, starting from the specified index."
+	),
   f = function(args) {
     # Call Google search function
     results <- google_search(args$query, args$start, args$num)

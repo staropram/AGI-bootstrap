@@ -3,7 +3,8 @@ config <- list(
 	chatType="chatgpt",
 	aiName="test1",
 	runtimeDirPrefix="runtime",
-	initialPrompt="agi_prompt_v0.1.txt",
+	#initialPrompt="agi_prompt_v0.1.txt",
+	initialPrompt="agi_prompt_alt_1.txt",
 	continuous=T,
 	cleanWorkingDir=T,
 	trackTokens=F, # not implemented yet, but leave here

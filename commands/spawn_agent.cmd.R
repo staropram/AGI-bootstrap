@@ -1,8 +1,12 @@
 command_spawn_agent <- list(
-  active = T,
-  author = "human",
-  usage = '{"action":"spawn_agent","id":"agent_id","max_tokens":"max_tokens","comment":"Spawns a chatGPT agent with the specified ID and specified params."}',
-  f = function(args) {
-  		agentManager$spawnAgent(args$max_tokens)
-  }
+	active = T,
+	author = "human",
+	usage = list(
+		action="spawn_agent",
+		max_tokens="[0,4096]",
+		comment="Spawns a chatGPT agent"
+	),
+	f = function(args) {
+		agentManager$spawnAgent(args$max_tokens)
+	}
 )
