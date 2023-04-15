@@ -4,7 +4,8 @@ library(R6)
 library(jsonlite)
 library(promises)
 library(future)
-plan(multicore)
+#plan(multicore)
+plan(sequential)
 
 source("config.R")
 

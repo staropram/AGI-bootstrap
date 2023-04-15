@@ -66,7 +66,7 @@ AgentManager <- R6Class(
 			#}
 			agent <- self$agents[[msg$to]]
 			# keep track of who we were last talking to
-			agent$lastChatPartner <- msg$from
+			#agent$lastChatPartner <- msg$from
 			response <- agent$chat(msg)
 			#print(paste0("agentManager responding: ",response))
 			response

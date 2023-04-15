@@ -32,8 +32,8 @@ Agent <- R6Class(
 		},
 
 		chat = function(cmdMsg) {
-			encodedMsg <- commandHandler$encodeCommand(cmdMsg)
-			response <- self$gptInterface$chat(encodedMsg)
+			#encodedMsg <- commandHandler$encodeCommand(cmdMsg)
+			response <- self$gptInterface$chat(cmdMsg)
 			#print(paste0("Agent responding: ",response))
 			response
 		}

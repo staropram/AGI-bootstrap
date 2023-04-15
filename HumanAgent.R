@@ -71,7 +71,7 @@ HumanAgent <- R6Class(
 		# any message that doesn't make sense gets
 		# sent to us
 		chat = function(msg) {
-			#print("human chat called")
+			print("human chat called")
 			# get the response from the user
 			# pass the message incase the user wants
 			# it for debug info

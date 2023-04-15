@@ -17,7 +17,8 @@ GPTInterface <- R6Class(
 		},
 
 		chatOpenAI = function(agent,msg) {
-			agent$appendMessage("user",msg)
+			encodedMsg <- commandHandler$encodeCommand(msg)
+			agent$appendMessage("user",encodedMsg)
 			completion <- future({create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,
@@ -28,13 +29,15 @@ GPTInterface <- R6Class(
 				response <- r$choices$message.content
 				agent$appendMessage("assistant",response)
 				commandHandler$handleCommand(response,agent)
+				agent$lastChatPartner <- msg$from
 			})
 			NULL
 		},
 
 		chatFakeAI = function(agent,msg) {
 			Sys.sleep(config$fakegpt$artificialDelaySecs)
-			self$fakeAI$chat(msg,agent)
+			encodedMsg <- commandHandler$encodeCommand(msg)
+			self$fakeAI$chat(encodedMsg,agent)
 			NULL
 		},
 
