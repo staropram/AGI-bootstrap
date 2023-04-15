@@ -12,7 +12,7 @@ HumanAgent <- R6Class(
 			msg=commandHandler$encodeCommand(list(
 				from=self$id,
 				to=id,
-				action="chat_with_agent",
+				action="chat",
 				msg=msg
 			))
 			commandHandler$handleCommand(msg,self)
@@ -94,7 +94,7 @@ HumanAgent <- R6Class(
 			commandHandler$encodeCommand(list(
 				from="h0",
 				to=msg$from,
-				action="chat_with_agent",
+				action="chat",
 				msg=response
 			))
 		}

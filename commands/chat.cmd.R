@@ -1,9 +1,9 @@
-command_chat_with_agent <- list(
+command_chat <- list(
 	active = T,
 	author = "human",
 
 	usage = list(
-		action="chat_with_agent",
+		action="chat",
 		from="src_id",
 		to="dst_id",
 		msg="message"

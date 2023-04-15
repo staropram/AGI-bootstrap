@@ -111,7 +111,7 @@ CommandHandler <- R6Class(
 				cmdDecoded <- list(msg=list(
 					from=agent$id,
 					to=agent$lastChatPartner,
-					action="chat_with_agent",
+					action="chat",
 					msg=rawMsg
 				))
 			}
@@ -156,10 +156,10 @@ CommandHandler <- R6Class(
 			# if our request was not a chat request
 			# we need to wrap the response in a chat
 			# request so it gets routed correctly
-			if(cmdMsg$action!="chat_with_agent") {
+			if(cmdMsg$action!="chat") {
 				response <- commandHandler$encodeCommand(list(
 					to=agent$id,
-					action="chat_with_agent",
+					action="chat",
 					msg=r
 			 	))
 			} else {

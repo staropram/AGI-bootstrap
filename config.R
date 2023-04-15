@@ -12,11 +12,12 @@ config <- list(
 	commandEncoding = "JSON",
 	commands = list(
 		"list_commands",
-		"chat_with_agent",
+		"chat",
 		"spawn_agent",
 		"show_command_source",
 		"write_file",
-		"source_r_file"
+		"source_r_file",
+		"google_search"
 	),
 
 	# ChatGPT options
@@ -28,7 +29,8 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "spawn_agent_test",
+		#script = "spawn_agent_test",
+		script = "google_search_test",
 		#script = "create_file_test",
 		artificialDelaySecs = 1
 	)
