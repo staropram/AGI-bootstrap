@@ -13,13 +13,7 @@ command_chat_with_agent <- list(
 
 	f = function(cmdMsg) {
 		# send the message to the agent
-		response <- agentManager$chatWithAgent(cmdMsg)
-		browser()
-		if(is.null(response)) {
-			# need to encode
-			return('{"error":"invalid agent id","comment":"you need to spawn an agent first"}')
-		}
-		# extract the message
-		response$apiResponse$choices$message.content[1]
+		#print(paste0("command responding"))
+		agentManager$chatWithAgent(cmdMsg)
 	}
 )

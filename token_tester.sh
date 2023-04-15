@@ -1,3 +1,5 @@
+echo $1
+exit
 # command to return how many tokens a message consumes
 out=`curl \
 	 -H "Content-Type: application/json" \

@@ -4,6 +4,11 @@ AgentManager <- R6Class(
 		agents = list(),
 		agentCount = 0,
 		agentIDSeq = 0,
+		# i don't know if we will ever have more
+		# than one human
+		humanCount = 0,
+		humanIDSeq = 0,
+		primaryHuman = NULL,
 		config = NULL,
 
 		initialize = function(config) {
@@ -26,11 +31,15 @@ AgentManager <- R6Class(
 		},
 
 		spawnHuman = function() {
-			print("A")
-			id <- paste0("h",self$agentIDSeq)
-			agent <- HumanAgent$new(id)
-			self$addAgent(agent)
-			agent
+			id <- paste0("h",self$humanIDSeq)
+			human <- HumanAgent$new(id)
+			self$agents[[human$id]] <- human
+			if(self$humanCount==0) {
+				self$primaryHuman <- human
+			}
+			self$humanIDSeq <- self$humanIDSeq + 1
+			self$humanCount <- self$humanCount + 1
+			human
 		},
 
 		spawnAgent = function(max_tokens) {
@@ -48,11 +57,19 @@ AgentManager <- R6Class(
 		},
 
 		chatWithAgent = function(msg) {
+			#print("AgentManager::chatWithAgent")
 			if(! as.character(msg$to) %in% names(self$agents)) {
 				return(NULL)
 			}
+			#if(! as.character(msg$from) %in% names(self$agents)) {
+			#	return(NULL)
+			#}
 			agent <- self$agents[[msg$to]]
-			agent$chat(msg)
+			# keep track of who we were last talking to
+			agent$lastChatPartner <- msg$from
+			response <- agent$chat(msg)
+			#print(paste0("agentManager responding: ",response))
+			response
 		},
 
 		newAgent = function() {

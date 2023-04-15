@@ -8,6 +8,7 @@ Agent <- R6Class(
 		config = NULL,
 		workingDir = "",
 		tokensUsed = 0,
+		lastChatPartner = NULL,
 
 		initialize = function(config,id) {
 			self$id <- id
@@ -33,10 +34,7 @@ Agent <- R6Class(
 		chat = function(cmdMsg) {
 			encodedMsg <- commandHandler$encodeCommand(cmdMsg)
 			response <- self$gptInterface$chat(encodedMsg)
-			self$tokensUsed <- response$apiResponse$usage$total_tokens
-			if(self$config$trackTokens) {
-				response$msg$tokens <- self$tokensUsed
-			}
+			#print(paste0("Agent responding: ",response))
 			response
 		}
 	)

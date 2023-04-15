@@ -18,19 +18,24 @@ GPTInterface <- R6Class(
 
 		chatOpenAI = function(agent,msg) {
 			agent$appendMessage("user",msg)
-			completion <- create_chat_completion(
+			completion <- future({create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,
 			  max_tokens = config$chatgpt$max_tokens,
 			  temperature = config$chatgpt$temperature 
-			)
-			agent$appendMessage("assistant",completion$choices$message.content)
-			completion
+			)})
+			completion %...>% (function(r) {
+				response <- r$choices$message.content
+				agent$appendMessage("assistant",response)
+				commandHandler$handleCommand(response,agent)
+			})
+			NULL
 		},
 
 		chatFakeAI = function(agent,msg) {
 			Sys.sleep(config$fakegpt$artificialDelaySecs)
-			self$fakeAI$chat(msg)
+			self$fakeAI$chat(msg,agent)
+			NULL
 		},
 
 		chat = function(msg) {
@@ -38,18 +43,13 @@ GPTInterface <- R6Class(
 				"chatgpt" = self$chatOpenAI,
 				"fakegpt" = self$chatFakeAI
 			)
-			apiResponse <- f(self$agent,msg)
-			response <- list(
-				apiResponse = apiResponse,
-				msg=switch(self$type,
-					"chatgpt" = apiResponse$choices$message.content,
-					"fakegpt" = apiResponse
-				)
-			)
-			if(self$type=="fakegpt") {
-				response$apiResponse$usage <- list(total_tokens=1)
-			}
-			response
+			f(self$agent,msg)
+			
+			# note that there is no response
+			# as the chat is handled asyncronously
+			# and when the result is obtained, handle
+			# command is then called
+			return(NULL)
 		}
 	)
 )

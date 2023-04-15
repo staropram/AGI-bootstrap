@@ -17,7 +17,11 @@ print_comment <- function(comment) {
 }
 
 print_param <- function(paramName,paramValue) {
-	cat(paramColor,paramName,": \"",paramValue,"\"",resetColor,"\n",sep="")
+	if(nchar(paramValue)>300) {
+		cat(paramColor,paramName,": \"",substring(paramValue,0,300),"...[TRUNCATED\"",resetColor,"\n",sep="")
+	} else {
+		cat(paramColor,paramName,": \"",paramValue,"\"",resetColor,"\n",sep="")
+	}
 }
 
 #print_action("test_action")

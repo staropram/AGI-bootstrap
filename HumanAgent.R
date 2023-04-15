@@ -9,15 +9,61 @@ HumanAgent <- R6Class(
 		},
 
 		chatWithAgent = function(id,msg) {
-			cmdMsg <- list(
+			msg=commandHandler$encodeCommand(list(
 				from=self$id,
 				to=id,
 				action="chat_with_agent",
 				msg=msg
+			))
+			commandHandler$handleCommand(msg,self)
+		},
+
+		# called by the command handler to ask
+		# permission if it can execute the command
+		askPermission = function(msg) {
+			# if the command was sent by a human
+			# then we immediately grant permission
+			# have a parameter that is impossible for
+			# an AI to set, but our agent can
+
+			a <- "z"
+			response <- list(
+				hasPermission=F,
+				shouldQuit=F,
+				response=NULL
 			)
-			commandHandler$handleCommand(
-				commandHandler$encodeCommand(cmdMsg)
-			)
+			while(a!="i") {
+				a <- readline("c-continue, i-interact, d-debug, q-quit: ")
+				if(a=="i") {
+					response$response <- readline("Respond: ")
+					break
+				} else if(a=="d") {
+					browser()
+				} else if(a=="q") {
+					response$shouldQuit <- T
+					break
+				} else if(a=="c") {
+					response$hasPermission <- T
+					break
+				}
+			}
+			response
+		},
+
+		# gets user input
+		getInput = function(msg) {
+			writeLines("holy mackeroni","test.txt")
+			a <- "z"
+			while(a!="i") {
+				a <- readline("i-interact, d-debug, q-quit: ")
+				if(a=="i") {
+					return(readline("Respond: "))
+				} else if(a=="d") {
+					browser()
+				} else if(a=="q") {
+					return(NULL)
+				} 
+			}
 		},
 
 		# this is called by other agents when they
@@ -25,8 +71,32 @@ HumanAgent <- R6Class(
 		# any message that doesn't make sense gets
 		# sent to us
 		chat = function(msg) {
-			print(paste0("received msg: ",msg))
-		}
+			#print("human chat called")
+			# get the response from the user
+			# pass the message incase the user wants
+			# it for debug info
+			response <- self$getInput(msg)
+			# if the user quits it returns a null response
+			# if we stop chatting with the agent, our
+			# conversation cannot continue so this is like
+			# a quit
+			#if(!is.null(response)) {
+			#	self$chatWithAgent(msg$from,response)
+			#}
+			if(is.null(response)) {
+				return(commandHandler$encodeCommand(list(
+					from="h0",
+					action="exit",
+					comment="user requested exit"
+				)))
+			}
 
+			commandHandler$encodeCommand(list(
+				from="h0",
+				to=msg$from,
+				action="chat_with_agent",
+				msg=response
+			))
+		}
 	)
 )

@@ -4,7 +4,7 @@ config <- list(
 	aiName="test1",
 	runtimeDirPrefix="runtime",
 	initialPrompt="agi_prompt_v0.1.txt",
-	continuous=F,
+	continuous=T,
 	cleanWorkingDir=T,
 	trackTokens=F, # not implemented yet, but leave here
 
@@ -12,7 +12,11 @@ config <- list(
 	commandEncoding = "JSON",
 	commands = list(
 		"list_commands",
-		"chat_with_agent"
+		"chat_with_agent",
+		"spawn_agent",
+		"show_command_source",
+		"write_file",
+		"source_r_file"
 	),
 
 	# ChatGPT options
@@ -24,7 +28,8 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "chat_test",
+		script = "spawn_agent_test",
+		#script = "create_file_test",
 		artificialDelaySecs = 1
 	)
 

@@ -10,6 +10,6 @@ command_list_commands <- list(
 
 	# add a list commands command
 	f=function(args) {
-		toJSON(commandHandler$commandList)
+		commandHandler$encodeCommand(commandHandler$commandList)
 	}
 )

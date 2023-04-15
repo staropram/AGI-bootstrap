@@ -3,7 +3,8 @@ command_write_file <- list(
 	author="human",
 	usage='{"action":"write_file","fn":"filename","content":"filecontents","comment":"Writes filecontents to the specified file"}',
 	f=function(args) {
-		writeLines(args$content,args$fn)
+		fn <- paste0(config$runtimeDir,"/",args$fn)
+		writeLines(args$content,fn)
 		'{"status":"ok"}'
 	}
 )

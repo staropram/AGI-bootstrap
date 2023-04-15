@@ -34,24 +34,22 @@ FakeAI <- R6Class(
 			self$script <- get(scriptDataName)
 		},
 
-		chat = function(msg) {
-			print("received: ")
-			print(msg)
+		chat = function(msg,agent) {
 			# we don't care about the message as we
 			# just issue a fixed sequence of commands
 			self$scriptIndex <- self$scriptIndex + 1
 			if(self$scriptIndex==(length(self$script)+1)) {
 				self$scriptIndex <- 1
 			}
-			response <- future({
+
+			completion <- future({
 				commandHandler$encodeCommand(self$script[[self$scriptIndex]])
 			})
-			
-			response %...>% (function(r) {
-				  commandHandler$handleCommand(r)
+			#print(paste0("fakeAI responds: ",response))
+			completion %...>% (function(r) {
+				  commandHandler$handleCommand(r,agent)
 			})
-				#commandHandler$encodeCommand(response)
-			#)
+			NULL
 		}
 	)
 )

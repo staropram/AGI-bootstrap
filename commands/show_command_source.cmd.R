@@ -3,9 +3,9 @@ command_show_command_source <- list(
 	author="human",
 	usage='{"action":"show_command_source","command_name":"name","comment":"Shows the R source for the specified command \"name\". The command has to be in the list of available commands."}',
 	f=function(args) {
-		fn <- paste0(args$command_name,'.cmd.R')
+		fn <- paste0(config$runtimeDir,"/",args$command_name,'.cmd.R')
 		if(!file.exists(fn)) {
-			return('{"error":"Invalid command"}')
+			return(paste0('{"error":"Command',args$command_name,' does not exist"}'))
 		}
 		f <- file(fn,"r")
 		content <- paste(readLines(f),collapse="\n")

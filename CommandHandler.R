@@ -97,14 +97,25 @@ CommandHandler <- R6Class(
 		# this receives an encoded message from any agent
 		# and must attempt to decode the message and
 		# properly handle it
-		handleCommand = function(rawMsg) {
+		handleCommand = function(rawMsg,agent) {
+
 			# attempt to decode the message
 			cmdDecoded <- self$decodeCommand(rawMsg)
 			# if we cannot decode
 			if(!cmdDecoded$success) {
-				# pass back to the first human agent
-				# XXX
+				# gpt3.5 often sends poorly formatted
+				# messages that do not decode
+				# we try and figure out who the message 
+				# was supposed to goto, should be a
+				# record of it in the agent's messages
+				cmdDecoded <- list(msg=list(
+					from=agent$id,
+					to=agent$lastChatPartner,
+					action="chat_with_agent",
+					msg=rawMsg
+				))
 			}
+
 			# attempt to validate the command
 			msgValidation <- self$validate(cmdDecoded$msg)
 			# if the message is not valid
@@ -112,19 +123,54 @@ CommandHandler <- R6Class(
 				# XXX
 			}
 
-			# execute the message
-			self$execute(cmdDecoded$msg)
+			# if the AI is trying to chat to us, we
+			# don't want to ask permission for that
+			self$printMsg(cmdDecoded)
+
+			# do not as for permission if in continous mode
+			if(config$continuous) {
+				# execute the message
+				return(self$execute(cmdDecoded$msg,agent))
+			}
+
+			permission <- agentManager$primaryHuman$askPermission(cmdDecoded)
+			if(permission$hasPermission) {
+				cmdResult <- self$execute(cmdDecoded$msg)
+			} else {
+				# send some sort of message to the AI
+				# explaining why they can't continue
+			}
 		},
 
-		execute = function(cmdMsg) {
+		execute = function(cmdMsg,agent) {
+			if(cmdMsg$action=="exit") {
+				return()
+			}
+			r <- self$commands[[cmdMsg$action]]$f(cmdMsg)
 
-			print("execute")
-			browser()
-			output <- self$commands[[cmdMsg$action]]$f(cmdMsg)
-			output
+			# if a null response was obtained do nothing
+			if(is.null(r)) {
+				return()
+			}
+
+			# if our request was not a chat request
+			# we need to wrap the response in a chat
+			# request so it gets routed correctly
+			if(cmdMsg$action!="chat_with_agent") {
+				response <- commandHandler$encodeCommand(list(
+					to=agent$id,
+					action="chat_with_agent",
+					msg=r
+			 	))
+			} else {
+				response <- r
+			}
+
+			commandHandler$handleCommand(response,agent)
 		},
 
-		printMsg = function(msg) {
+		printMsg = function(cmdMsg) {
+			msg <- cmdMsg$msg
 			# create a default
 			cmd <- self$commands[[msg$action]]
 			if("printMsg" %in% names(cmd)) {
