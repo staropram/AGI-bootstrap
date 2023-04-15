@@ -120,7 +120,11 @@ CommandHandler <- R6Class(
 			msgValidation <- self$validate(cmdDecoded$msg)
 			# if the message is not valid
 			if(!msgValidation$isValid) {
-				# XXX
+				response <- list(
+					error="Unrecognised command"
+				)
+				browser()
+				return(commandHandler$encodeCommand(response))
 			}
 
 			# if the AI is trying to chat to us, we
