@@ -57,12 +57,12 @@ AgentManager <- R6Class(
 		},
 
 		chatWithAgent = function(msg) {
-			#print("AgentManager::chatWithAgent")
-			if(! as.character(msg$to) %in% names(self$agents)) {
-				return(NULL)
-			}
-			#if(! as.character(msg$from) %in% names(self$agents)) {
-			#	return(NULL)
+			# we have checked this anyway
+			#if(! as.character(msg$to) %in% names(self$agents)) {
+			#	return(list(error="invalid to field"))
+			#}
+			#if(! as.character(msg$from) %in% c(names(self$agents),"C0")) {
+			#	return(list(error="invalid from field"))
 			#}
 			agent <- self$agents[[msg$to]]
 			# keep track of who we were last talking to

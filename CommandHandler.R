@@ -78,7 +78,7 @@ CommandHandler <- R6Class(
 		# determines if a message is valid or not
 		# returns a list because we might want to
 		# add additional things in here in the future
-		validate = function(msg) {
+		validate = function(msg,agent) {
 			notValid <- list(isValid=F)
 			isValid <- list(isValid=T)
 			if(is.null(msg)) {
@@ -92,7 +92,7 @@ CommandHandler <- R6Class(
 			# check action exists
 			actionExists <- msg$action %in% self$commandNames
 			if(!actionExists) {
-				notValid$error <- paste0("Invalid action: ",msg$action)
+				notValid$error <- paste0("Invalid action: \"",msg$action,"\"")
 				return(notValid)
 			}
 
@@ -103,22 +103,47 @@ CommandHandler <- R6Class(
 			paramsRequired <- names(actionCmd$usage)
 			paramsRequired <- paramsRequired[paramsRequired!="comment"]
 			errorMsg <- NULL
-			for(param in names(actionCmd$usage)) {
+			for(param in names(paramsRequired)) {
 				if(!param %in% paramsProvided) {
-					errorMsg <- paste0(errorMsg,param," missing ")
+					errorMsg <- paste0(errorMsg,"parameter \"",param,"\" missing ")
 				}
 			}
 			if(!is.null(errorMsg)) {
 				notValid$error <- errorMsg
 				return(notValid)
 			}
+
+			# check src and destination for chat msg
+			if(msg$action=="chat") {
+				# the src id should match the sending agent
+				# unless it's me h0 as I can impersonate
+				if(msg$from!=agent$id & agent$id!="h0") {
+					notValid$error <- paste0("impersonation: from id: \"",msg$from,"\" does not match sending agent id: \"",agent$id,"\"")
+					return(notValid)
+				}
+
+				# check separately if someone is trying
+				# to chat with the controller
+				if(msg$to=="C0") {
+					notValid$error <- "You cannot \"chat\" with C0, only send normal commands"
+					return(notValid)
+				}
+
+				# finally check the "to" agent exists
+				validToIDs <- names(agentManager$agents)
+				if(! msg$to %in% validToIDs) {
+					notValid$error <- paste0("to: \"",msg$to,"\" does not exist.")
+					return(notValid)
+				}
+			}
+
 			isValid
 		},
 
 		# this receives an encoded message from any agent
 		# and must attempt to decode the message and
 		# properly handle it
-		handleCommand = function(rawMsg,agent) {
+		handleCommand = function(rawMsg,agent,validate=T) {
 
 			# attempt to decode the message
 			cmdDecoded <- self$decodeCommand(rawMsg)
@@ -138,15 +163,24 @@ CommandHandler <- R6Class(
 			}
 
 			# attempt to validate the command
-			msgValidation <- self$validate(cmdDecoded$msg)
+			if(validate) {
+				msgValidation <- self$validate(cmdDecoded$msg,agent)
+			} else {
+				msgValidation <- list(isValid=T)
+			}
 			# if the message is not valid
 			if(!msgValidation$isValid) {
 				response <- list(
 					action="error",
 					error=msgValidation$error
 				)
-				print("invalid message")
-				browser()
+				print("invalid message:")
+				# we can still print invalid commands
+				# as they are already parsed by the
+				# transcoder
+				self$printMsg(cmdDecoded)
+
+
 				# send the "error" action to be executed
 				return(self$execute(response,agent))
 			}
@@ -180,7 +214,7 @@ CommandHandler <- R6Class(
 			if(cmdMsg$action=="error") {
 				r <- cmdMsg$error
 			} else {
-				# run the request command
+				validate <- T
 				r <- self$commands[[cmdMsg$action]]$f(cmdMsg)
 			}
 
@@ -201,11 +235,13 @@ CommandHandler <- R6Class(
 					action="chat",
 					msg=r
 			 	))
+				# do not "validate" own commands
+				validate <- F
 			} else {
 				response <- r
 			}
 
-			commandHandler$handleCommand(response,agent)
+			commandHandler$handleCommand(response,agent,validate)
 		},
 
 		printMsg = function(cmdMsg) {
