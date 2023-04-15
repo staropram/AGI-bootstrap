@@ -197,7 +197,7 @@ CommandHandler <- R6Class(
 
 			permission <- agentManager$primaryHuman$askPermission(cmdDecoded)
 			if(permission$hasPermission) {
-				cmdResult <- self$execute(cmdDecoded$msg)
+				return(self$execute(cmdDecoded$msg,agent))
 			} else {
 				# send some sort of message to the AI
 				# explaining why they can't continue

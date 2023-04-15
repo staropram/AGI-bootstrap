@@ -1,6 +1,6 @@
 config <- list(
-	chatType="fakegpt",
-	#chatType="chatgpt",
+	#chatType="fakegpt",
+	chatType="chatgpt",
 	aiName="test0",
 	runtimeDirPrefix="runtime",
 	#initialPrompt="agi_prompt_v0.1.txt",
@@ -13,6 +13,7 @@ config <- list(
 	commandEncoding = "JSON",
 	commands = list(
 		"exit",
+		#"read_from_url",
 		"list_commands",
 		"chat",
 		"spawn_agent",

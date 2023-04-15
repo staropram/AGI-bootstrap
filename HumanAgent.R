@@ -21,10 +21,6 @@ HumanAgent <- R6Class(
 		# called by the command handler to ask
 		# permission if it can execute the command
 		askPermission = function(msg) {
-			# if the command was sent by a human
-			# then we immediately grant permission
-			# have a parameter that is impossible for
-			# an AI to set, but our agent can
 
 			a <- "z"
 			response <- list(
@@ -32,6 +28,14 @@ HumanAgent <- R6Class(
 				shouldQuit=F,
 				response=NULL
 			)
+			# any message originating from C0 or h0
+			# does not require permission, 
+			# we already validated the sender earlier
+			if(msg$msg$from %in% c("C0","h0")) {
+				response$hasPermission=T
+				return(response)
+			}
+
 			while(a!="i") {
 				a <- readline("c-continue, i-interact, d-debug, q-quit: ")
 				if(a=="i") {
