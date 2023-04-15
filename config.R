@@ -17,7 +17,8 @@ config <- list(
 		"show_command_source",
 		"write_file",
 		"source_r_file",
-		"google_search"
+		"google_search",
+		"list_files"
 	),
 
 	# ChatGPT options
@@ -30,8 +31,9 @@ config <- list(
 	# FakeGPT options
 	fakegpt = list(
 		#script = "spawn_agent_test",
-		script = "google_search_test",
+		#script = "google_search_test",
 		#script = "create_file_test",
+		script = "list_files_test",
 		artificialDelaySecs = 1
 	)
 
