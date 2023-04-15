@@ -8,6 +8,8 @@ plan(multicore)
 
 source("config.R")
 
+a <- function() {source("agi.R")}
+
 # first time we run keep track of root directory
 if(!exists("config$rootDir")) {
 	config$rootDir <- getwd()

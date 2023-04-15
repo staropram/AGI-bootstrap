@@ -18,7 +18,8 @@ config <- list(
 		"write_file",
 		"source_r_file",
 		"google_search",
-		"list_files"
+		"list_files",
+		"read_file"
 	),
 
 	# ChatGPT options
@@ -33,7 +34,8 @@ config <- list(
 		#script = "spawn_agent_test",
 		#script = "google_search_test",
 		#script = "create_file_test",
-		script = "list_files_test",
+		#script = "list_files_test",
+		script = "read_and_write_file_test",
 		artificialDelaySecs = 1
 	)
 

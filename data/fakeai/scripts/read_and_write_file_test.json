@@ -1,5 +1,0 @@
-{"commands":[
-{"action":"write_file", "fn":"test.txt","content":"Testing testing 123\ntesting 123","comment":"Creating a file with test content"},
-{"action":"read_file", "fn":"test.txt","comment":"Reading the content back in"},
-{"action":"exit"}
-]}
