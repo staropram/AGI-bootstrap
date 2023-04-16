@@ -19,8 +19,8 @@ config <- list(
 		"show_command_source",
 		"write_file",
 		"source_r_file",
-		#"google_search", works but needs read_from_url
-		#"read_from_url", need to fix for new framework
+		# "google_search", # enable with care, burns tokens
+		# "read_from_url", # enable with care, burns tokens
 		"list_files",
 		"read_file"
 	),

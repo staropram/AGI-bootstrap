@@ -34,6 +34,14 @@ FakeAI <- R6Class(
 			self$script <- get(scriptDataName)
 		},
 
+		syncChat = function(msg) {
+			self$scriptIndex <- self$scriptIndex + 1
+			if(self$scriptIndex==(length(self$script)+1)) {
+				self$scriptIndex <- 1
+			}
+			commandHandler$encodeCommand(self$script[[self$scriptIndex]])
+		},
+
 		chat = function(msg,agent) {
 			# we don't care about the message as we
 			# just issue a fixed sequence of commands

@@ -16,10 +16,30 @@ GPTInterface <- R6Class(
 			}
 		},
 
+		syncChatOpenAI = function(agent,msg) {
+			encodedMsg <- commandHandler$encodeCommand(msg)
+			agent$appendMessage("user",encodedMsg)
+			completion <- create_chat_completion(
+			  model = config$chatgpt$model,
+			  messages = agent$messages,
+			  max_tokens = config$chatgpt$max_tokens,
+			  temperature = config$chatgpt$temperature 
+			)
+			response <- completion$choices$message.content
+			agent$appendMessage("assistant",response)
+			agent$lastChatPartner <- msg$from
+			response
+		},
+
+		syncChatFakeAI = function(agent,msg) {
+			Sys.sleep(config$fakegpt$artificialDelaySecs)
+			encodedMsg <- commandHandler$encodeCommand(msg)
+			self$fakeAI$syncChat(encodedMsg)
+		},
+
 		chatOpenAI = function(agent,msg) {
 			encodedMsg <- commandHandler$encodeCommand(msg)
 			agent$appendMessage("user",encodedMsg)
-			print("chatting with openai")
 			completion <- future({create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,
@@ -40,6 +60,14 @@ GPTInterface <- R6Class(
 			encodedMsg <- commandHandler$encodeCommand(msg)
 			self$fakeAI$chat(encodedMsg,agent)
 			NULL
+		},
+
+		syncChat = function(msg) {
+			f <- switch(self$type,
+				"chatgpt" = self$syncChatOpenAI,
+				"fakegpt" = self$syncChatFakeAI
+			)
+			f(self$agent,msg)
 		},
 
 		chat = function(msg) {
