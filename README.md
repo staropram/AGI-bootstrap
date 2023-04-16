@@ -1,9 +1,8 @@
 # Summary
 CAVEAT: This is a work in progress and we are at the beginning of that progress. Things may rapidly change or break.
 
-<div style="text-align: center;">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/GGuf32qFeQk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
+[![Video Thumbnail](screenshots/youtube-thumbnail.png)](https://www.youtube.com/watch?v=GGuf32qFeQk)
+
 
 The purpose of this project is to see if an LLM such as chatgpt can bootstrap itself towards AGI. (Note: it can also be pointed toward any goal by editing the initial prompt, if you want to acheive arbitrary tasks.)
 
