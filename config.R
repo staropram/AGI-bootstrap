@@ -14,6 +14,7 @@ config <- list(
 	commands = list(
 		"exit",
 		"list_commands",
+      "download_file",
 		"chat",
 		"spawn_agent",
 		"show_command_source",
@@ -38,7 +39,8 @@ config <- list(
 		#script = "google_search_test",
 		#script = "create_file_test",
 		#script = "list_files_test",
-		script = "read_and_write_file_test",
+		#script = "read_and_write_file_test",
+		script = "download_file_test",
 		#script = "invalid_commands_test",
 		#script = "read_from_url_test",
 		artificialDelaySecs = 1
