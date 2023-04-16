@@ -1,6 +1,6 @@
 config <- list(
-	#chatType="fakegpt",
-	chatType="chatgpt",
+	chatType="fakegpt",
+	#chatType="chatgpt",
 	aiName="test0",
 	runtimeDirPrefix="runtime",
 	#initialPrompt="agi_prompt_v0.1.txt",
@@ -13,14 +13,14 @@ config <- list(
 	commandEncoding = "JSON",
 	commands = list(
 		"exit",
-		#"read_from_url",
 		"list_commands",
 		"chat",
 		"spawn_agent",
 		"show_command_source",
 		"write_file",
 		"source_r_file",
-		"google_search",
+		#"google_search", works but needs read_from_url
+		#"read_from_url", need to fix for new framework
 		"list_files",
 		"read_file"
 	),
@@ -39,7 +39,8 @@ config <- list(
 		#script = "create_file_test",
 		#script = "list_files_test",
 		#script = "read_and_write_file_test",
-		script = "invalid_commands_test",
+		#script = "invalid_commands_test",
+		script = "read_from_url_test",
 		artificialDelaySecs = 1
 	)
 

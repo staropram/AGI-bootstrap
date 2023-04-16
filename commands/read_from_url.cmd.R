@@ -75,6 +75,7 @@ summarize_long_text <- function(prompt, total_max_tokens = 2048, chunk_size = 20
    agentManager$spawnAgent(id=agentID, max_tokens=chunk_max_tokens)
 	nSections <- length(text_sections)
 	sectionCount <- 1
+	# do this in parallel
   for (section in text_sections) {
 
     # Request a summary for the current section
