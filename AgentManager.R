@@ -63,8 +63,10 @@ AgentManager <- R6Class(
 			agent$chat(msg)
 		},
 
-		synchronousChat = function(msg) {
+		syncChat = function(msg) {
 			# this will chat without using a subprocess
+			agent <- self$agents[[msg$to]]
+			agent$syncChat(msg)
 		},
 
 		newAgent = function() {

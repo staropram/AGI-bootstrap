@@ -31,6 +31,10 @@ Agent <- R6Class(
 			self$messages <- list()
 		},
 
+		syncChat = function(cmdMsg) {
+			self$gptInterface$syncChat(cmdMsg)
+		},
+
 		chat = function(cmdMsg) {
 			#encodedMsg <- commandHandler$encodeCommand(cmdMsg)
 			response <- self$gptInterface$chat(cmdMsg)

@@ -6,97 +6,108 @@ library(xml2)
 # this sensibly and break on newlines rather than
 # randomly
 split_long_text <- function(long_text, chunk_size) {
-	textLen <- nchar(long_text)
-	# if already small, we don't need to do anything
-	if(textLen<chunk_size) {
-		return(long_text)
-	}
+   textLen <- nchar(long_text)
+   # if already small, we don't need to do anything
+   if(textLen<chunk_size) {
+      return(long_text)
+   }
 
-	# otherwise we look for newlines and split on them
-	# if possible, if there is a contiguous length
-	# of text longer than the chunk_size without a newline
-	sections <- list()
-	splitPos <- 0
-	while(textLen>chunk_size) {
-		# find the newlines
-		newlineLocs <- unlist(gregexpr("\n",long_text))
-		if(min(newlineLocs)>chunk_size) {
-			lastNewline <- -1
-		} else {
-			# find the last newline at a pos < chunk_size
-			lastNewline <- max(newlineLocs[newlineLocs<chunk_size])
-		}
-		# if no nl was found we need to split another way
-		if(lastNewline==-1) {
-			# try and split on space
-			spaceLocs <- unlist(gregexpr(" ",long_text))
-			lastSpaceLoc <- max(spaceLocs[spaceLocs<chunk_size])
-			# if can't split on space, just split
-			if(lastSpaceLoc==-1) {
-				splitPos <- chunk_size
-			} else {
-				splitPos <- lastSpaceLoc
-			}
+   # otherwise we look for newlines and split on them
+   # if possible, if there is a contiguous length
+   # of text longer than the chunk_size without a newline
+   sections <- list()
+   splitPos <- 0
+   while(textLen>chunk_size) {
+      # find the newlines
+      newlineLocs <- unlist(gregexpr("\n",long_text))
+      if(min(newlineLocs)>chunk_size) {
+         lastNewline <- -1
+      } else {
+         # find the last newline at a pos < chunk_size
+         lastNewline <- max(newlineLocs[newlineLocs<chunk_size])
+      }
+      # if no nl was found we need to split another way
+      if(lastNewline==-1) {
+         # try and split on space
+         spaceLocs <- unlist(gregexpr(" ",long_text))
+         lastSpaceLoc <- max(spaceLocs[spaceLocs<chunk_size])
+         # if can't split on space, just split
+         if(lastSpaceLoc==-1) {
+            splitPos <- chunk_size
+         } else {
+            splitPos <- lastSpaceLoc
+         }
 
-		} else {
-			splitPos <- lastNewline
-		}
+      } else {
+         splitPos <- lastNewline
+      }
 
-		# otherwise split on the newline
-		section <- substring(long_text,0,splitPos-1)
-		# add the section
-		sections <- c(sections,section)
+      # otherwise split on the newline
+      section <- substring(long_text,0,splitPos-1)
+      # add the section
+      sections <- c(sections,section)
 
-		# continue with the remainder of the text
-		long_text <- substring(long_text,splitPos+1)
-		textLen <- nchar(long_text)
-	}
+      # continue with the remainder of the text
+      long_text <- substring(long_text,splitPos+1)
+      textLen <- nchar(long_text)
+   }
 
-	sections
+   sections
 }
 
 
 summarize_long_text <- function(prompt, total_max_tokens = 2048, chunk_size = 2048) {
-  # Calculate the number of chunks (N)
-  N <- ceiling(nchar(prompt) / chunk_size)
+   # Calculate the number of chunks (N)
+   N <- ceiling(nchar(prompt) / chunk_size)
 
-  # Divide the total_max_tokens by the number of chunks
-  chunk_max_tokens <- floor(total_max_tokens / N)
+   # Divide the total_max_tokens by the number of chunks
+   chunk_max_tokens <- floor(total_max_tokens / N)
 
-  # Split the text into smaller sections
-  text_sections <- split_long_text(prompt,chunk_size)
+   # Split the text into smaller sections
+   text_sections <- split_long_text(prompt,chunk_size)
 
-  # Initialize an empty string to store the combined summary
-  combined_summary <- ""
+   # Initialize an empty string to store the combined summary
+   combined_summary <- ""
 
-  # Itetrate through text_sections and summarize each section
-   agentID <- paste0(sample(letters,10),collapse="")
-    # Spawn a new agent
-   agentManager$spawnAgent(id=agentID, max_tokens=chunk_max_tokens)
-	nSections <- length(text_sections)
-	sectionCount <- 1
-	# do this in parallel
-  for (section in text_sections) {
+   # Itetrate through text_sections and summarize each section
+   # Spawn a new agent
+   agentID <- agentManager$spawnAgent(max_tokens=chunk_max_tokens)
+   nSections <- length(text_sections)
+   sectionCount <- 1
+   # XXX do this in parallel
+   for (section in text_sections) {
 
-    # Request a summary for the current section
-    summary <- agentManager$chatWithAgent(agentID, paste("Please summarize the following text, try and reduce the length by at least two thirds:", section))
-  print(paste0("Summarizing text ",sectionCount,"/",nSections))
-  sectionCount <- sectionCount + 1
+      # Request a summary for the current section
+      msg <- list(
+         from="W0",
+         to=agentID,
+         action="chat",
+         msg=paste("Please summarize the following text, try and reduce the length by at least two thirds:", section)
+      )
+      summary <- agentManager$syncChat(msg)
+      print(paste0("Summarizing text ",sectionCount,"/",nSections))
+      sectionCount <- sectionCount + 1
 
-  	 # roll back the agent's messages so it can be used again
-	 agentManager$resetMessages(agentID)
+      # roll back the agent's messages so it can be used again
+      agentManager$resetMessages(agentID)
 
-    # Append the summary to the combined_summary
-    combined_summary <- paste(combined_summary, summary$msg)
-  }
+      # Append the summary to the combined_summary
+      combined_summary <- paste(combined_summary, summary)
+   }
   
-  # ask the AI to summarize the combined_summary so
-  # it is coherent
-   summary <- agentManager$chatWithAgent(agentID, paste("Please summarize the following text, try and reduce the length by at least two thirds:", combined_summary))
+   # ask the AI to summarize the combined_summary so
+   # it is coherent
+   msg <- list(
+      from="W0",
+      to=agentID,
+      action="chat",
+      msg=paste("Please summarize the following text, try and reduce the length by at least two thirds:", combined_summary)
+   )
+   summary <- agentManager$syncChat(msg)
 
-  agentManager$deleteAgent(agentID)
+   agentManager$deleteAgent(agentID)
 
-  return(summary$msg)
+   return(summary)
 }
 
 
@@ -135,11 +146,11 @@ command_read_from_url <- list(
   active = T,
   author = "human and AI",
   usage = list(
-		action="read_from_url",
-		url="url",
-		chatgpt_summarize="true/false",
-		comment="Reads the contents of the specified URL. If chatgpt_summarize is true, new chatgpt agents will be spawned (as necessary) to summarize the contents and this summary will be returned rather than the raw content."
-	),
+      action="read_from_url",
+      url="url",
+      chatgpt_summarize="true/false",
+      comment="Reads the contents of the specified URL. If chatgpt_summarize is true, new chatgpt agents will be spawned (as necessary) to summarize the contents and this summary will be returned rather than the raw content."
+   ),
 
   f = function(args) {
     url <- args$url
@@ -157,7 +168,7 @@ command_read_from_url <- list(
 
       # If chatgpt_summarize is TRUE, send the content to a ChatGPT agent for summarization
       if (chatgpt_summarize) {
-			summary <- summarize_long_text(clean_content,total_max_tokens=500,chunk_size=1500)
+         summary <- summarize_long_text(clean_content,total_max_tokens=500,chunk_size=1500)
         return(summary)
       } else {
         return(clean_content)

@@ -92,6 +92,7 @@ CommandHandler <- R6Class(
 			# check action exists
 			actionExists <- msg$action %in% self$commandNames
 			if(!actionExists) {
+				browser()
 				notValid$error <- paste0("Invalid action: \"",msg$action,"\"")
 				return(notValid)
 			}
