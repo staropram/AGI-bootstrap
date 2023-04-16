@@ -92,7 +92,6 @@ CommandHandler <- R6Class(
 			# check action exists
 			actionExists <- msg$action %in% self$commandNames
 			if(!actionExists) {
-				browser()
 				notValid$error <- paste0("Invalid action: \"",msg$action,"\"")
 				return(notValid)
 			}
@@ -181,7 +180,6 @@ CommandHandler <- R6Class(
 				# transcoder
 				self$printMsg(cmdDecoded)
 
-
 				# send the "error" action to be executed
 				return(self$execute(response,agent))
 			}
@@ -197,11 +195,21 @@ CommandHandler <- R6Class(
 			}
 
 			permission <- agentManager$primaryHuman$askPermission(cmdDecoded)
-			if(permission$hasPermission) {
+			if(permission$choice=="c") {
 				return(self$execute(cmdDecoded$msg,agent))
-			} else {
-				# send some sort of message to the AI
-				# explaining why they can't continue
+			} else if(permission$choice=="q") {
+				response <- list(
+					action="exit"
+				)
+				return(self$execute(response,agent))
+			} else if(permission$choice=="i") {
+				# respond the interaction
+				# maybe this should not be "error"
+				response <- list(
+					action="interaction",
+					msg=permission$msg
+				)
+				return(self$execute(response,agent))
 			}
 		},
 
@@ -213,11 +221,33 @@ CommandHandler <- R6Class(
 
 			# check if command was an "error" response
 			if(cmdMsg$action=="error") {
-				r <- cmdMsg$error
-			} else {
-				validate <- T
-				r <- self$commands[[cmdMsg$action]]$f(cmdMsg)
+				response <- commandHandler$encodeCommand(
+					list(
+						from="C0",
+						to=agent$id,
+						action="chat",
+						msg=cmdMsg$error
+					)
+				)
+				return(commandHandler$handleCommand(response,agent,validate=F))
 			}
+
+			if(cmdMsg$action=="interaction") {
+				response <- commandHandler$encodeCommand(
+					list(
+						from="h0",
+						to=agent$id,
+						action="chat",
+						msg=cmdMsg$msg
+					)
+				)
+				# do not validate this command
+				return(commandHandler$handleCommand(response,agent,validate=F))
+			}
+
+			# call the command
+			validate <- T
+			r <- self$commands[[cmdMsg$action]]$f(cmdMsg)
 
 			# if a null response was obtained do nothing
 			# this is used by commands that themselves
@@ -231,14 +261,15 @@ CommandHandler <- R6Class(
 			# request so it gets routed correctly
 			if(cmdMsg$action!="chat") {
 				response <- commandHandler$encodeCommand(list(
-																			 					from="C0",
+																								from="C0",
 					to=agent$id,
 					action="chat",
 					msg=r
-			 	))
+				))
 				# do not "validate" own commands
 				validate <- F
 			} else {
+				# chat just take the response
 				response <- r
 			}
 
@@ -262,6 +293,7 @@ CommandHandler <- R6Class(
 				}
 				print_comment(msg$comment)
 			}
+			flush.console()
 		},
 
 		# encodes a command in the specified command format

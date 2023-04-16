@@ -24,30 +24,30 @@ HumanAgent <- R6Class(
 
 			a <- "z"
 			response <- list(
-				hasPermission=F,
-				shouldQuit=F,
-				response=NULL
+				choice="c"
 			)
 			# any message originating from C0 or h0
 			# does not require permission, 
 			# we already validated the sender earlier
 			if(msg$msg$from %in% c("C0","h0")) {
-				response$hasPermission=T
 				return(response)
 			}
 
 			while(a!="i") {
-				a <- readline("c-continue, i-interact, d-debug, q-quit: ")
+				cat("c-continue, i-interact, d-debug, q-quit: ")
+				flush.console()
+				a <- readline()
 				if(a=="i") {
-					response$response <- readline("Respond: ")
+					response$msg <- readline("Respond: ")
+					response$choice <- "i"
 					break
 				} else if(a=="d") {
 					browser()
 				} else if(a=="q") {
-					response$shouldQuit <- T
+					response$choice <- "q"
 					break
 				} else if(a=="c") {
-					response$hasPermission <- T
+					response$choice <- "c"
 					break
 				}
 			}
@@ -56,7 +56,6 @@ HumanAgent <- R6Class(
 
 		# gets user input
 		getInput = function(msg) {
-			writeLines("holy mackeroni","test.txt")
 			a <- "z"
 			while(a!="i") {
 				a <- readline("i-interact, d-debug, q-quit: ")
