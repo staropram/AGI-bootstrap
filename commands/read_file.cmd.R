@@ -14,6 +14,10 @@ command_read_file <- list(
 			return(paste0('{"error":"',fn,' does not exist"}'))
 		}
 		content <- paste0(readLines(fn),collapse="\n")
-		paste0('{"status" = "ok", "content" = "',content,'"}')
+      response <- list(
+         status = "OK",
+         content = content
+      )
+      commandHandler$encodeCommand(response)
 	}
 )
