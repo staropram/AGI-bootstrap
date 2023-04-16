@@ -1,15 +1,21 @@
 # Summary
-CAVEAT: This is a work in progress and we are at the beginning of that progress. Things may rapidly change or break. Main external limitation here is context length.
+CAVEAT: This is a work in progress and we are at the beginning of that progress. Things may rapidly change or break.
 
-The purpose of this project is to see if an LLM such as chatgpt can bootstrap itself towards AGI. (could also be pointed toward any goal however)
+<div style="text-align: center;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GGuf32qFeQk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+The purpose of this project is to see if an LLM such as chatgpt can bootstrap itself towards AGI. (Note: it can also be pointed toward any goal by editing the initial prompt, if you want to acheive arbitrary tasks.)
 
 Think of it like an AI escape room, where we can test how much the AI can do with basic commands.
 
-A really clever AI would only need file operations (inc execute) and the ability to ask user for help (such as an API key). Such an AI could create any commands it needs: internet lookup, structs, long term memory, custom NN, etc.
+A really clever AI would only need file operations (inc execute) and the ability to ask user for help (such as an API key). Such an AI could create any commands it needs: internet lookup, structs, compress its own context, long term memory, custom NN, etc.
+
+The limiting factor here is the LLM context window as this determines how much the top-level agent can see at any one time.
 
 # Getting started
 
-TLDR: edit `config.R` and then `source("agi.R")` within R.
+TLDR: edit `config.R` and then `source("agi.R")` within R. This will automatically install any missing R dependencies and then run the program.
 
 The system is interactive (see `continuous` option to override). At the present time chatgpt3.5 needs a bit of help and I've noticed that sometimes it is way dumber than other times, so I think OpenAI throttles performance sometimes.
 
@@ -23,31 +29,73 @@ And it will then send the correct command. It is on the TODO list to try and fig
 
 Think of this more as a collaboration with the AI, eventually the interventions should be less and less as the AI makes useful suggestions.
 
+# Environment
+
+In order to use this, you need at least an OpenAI developer key, to chat to their GPT models. This is sourced from the calling environment so you need to set:
+
+```sh
+OPENAI_API_KEY=your_key
+```
+
+If you want your AI to use the `google_search` command then you need both a google API key and you need to also setup a [custom search engine](https://console.cloud.google.com/) through the google cloud thing. The following environment variables are used by the program:
+
+```sh
+GOOGLE_API_KEY=your_key
+GOOGLE_SEARCH_ENGINE=your_search_engine_id
+```
+
 # Config
 
 Take a look at the config template `config.R`:
 
 ```r
 config <- list(
-	chatType="chatgpt",
+	chatType="fakegpt",
+	#chatType="chatgpt",
 	aiName="test0",
 	runtimeDirPrefix="runtime",
-	initialPrompt="agi_prompt_v0.1.txt",
-	continuous=F,
+	#initialPrompt="agi_prompt_v0.1.txt",
+	initialPrompt="agi_prompt_alt_1.txt",
+	continuous=T,
 	cleanWorkingDir=T,
+	trackTokens=F, # not implemented yet, but leave here
+
+	# commands available to AI
+	commandEncoding = "JSON",
+	commands = list(
+		"exit",
+		"list_commands",
+		"chat",
+		"spawn_agent",
+		"show_command_source",
+		"write_file",
+		"source_r_file",
+		#"google_search", works but needs read_from_url
+		#"read_from_url", need to fix for new framework
+		"list_files",
+		"read_file"
+	),
 
 	# ChatGPT options
 	chatgpt = list(
-		model = "gpt-3.5-turbo",
-		max_tokens = 1024,
-        temperature = 0.7
+		model = "gpt-3.5-turbo-0301",
+		max_tokens = 512,
+		temperature = 0.7
 	),
 
 	# FakeGPT options
 	fakegpt = list(
-		script = "create_file_test",
+		#script = "spawn_agent_test",
+		#script = "google_search_test",
+		#script = "create_file_test",
+		#script = "list_files_test",
+		#script = "read_and_write_file_test",
+		#script = "invalid_commands_test",
+		script = "read_from_url_test",
 		artificialDelaySecs = 1
 	)
+
+	# Vicuna
 )
 ```
 
@@ -61,6 +109,7 @@ config <- list(
 | `initialPrompt` | the prompt that will be sent to the chatgpt/fakegpt to set out the goals of the system, message format, constraints etc. At the moment the goal is to become an AGI but you could put any task here. Prompts are kept in `data/prompts`|
 | `continuous` | is a boolean indicating whether the AGI bootstrap should run continuously or ask for confirmation before each step.|
 |`cleanWorkingDir` |is a boolean indicating whether the AIs working directory should be erased before starting. This is useful for testing, but if the AI creates a bunch of stuff you might not want to do this. Note that this option is set to false if you answer yes to restoring the state of a previous run.|
+|`trackTokens`|not implemented yet. When it is it setting to TRUE will mean that an agents used token count will be sent in any message to that agent.|
 
 ## Chat model options
 ### ChatGPT
@@ -80,7 +129,28 @@ config <- list(
 
 # Commands
 
-The commands that have so far been defined are in the `commands` directory. These are copied to the AIs working directory upon initialisation. You can disable a command by changing the `active` flag in the command file to `F`.
+## Command options
+| Option  | Description |
+| ------- | ----------- |
+| commandEncoding | The only option right now is "JSON", and transcoding is handled by the appropriate file in the `transcoders` directory. JSON is bloated and so I am working on a more succinct command encoding. |
+| commands | This is a list of which commands you want to make available to the AI. All commands are defined in the `commands` directory and have a certain format. |
+
+## Command descriptions
+| Command | Description |
+| ------- | ----------- |
+| `exit` | This allows the AI to exit the chat. This is only really useful for testing since the FakeAI can terminate a test. |
+| `list_commands`| This provides a list of the commands along with their parameters in the specified `commandEncoding`.|
+| `spawn_agent` | This spawns a new agent so the AI can converse with itself. |
+| `chat` | This is used by the AI to chat to other agents, including the human agent, you. |
+| `show_command_source` | This sends the source code to the AI of any of the listed commands. |
+| `write_file` | Allows the AI to write specified content to files. |
+| `source_r_file` | Loads an R file into the R environment using `source(file)`|
+| `google_search` | Performs a google search and returns the result list.|
+| `read_from_url` | <span style="color: red;">BROKEN</span> Reads the content from a URL, also has option for other instances of chatgpt to be called to summarize long content. This was working in the old framework and just needs parallelizing to work in the new framework. |
+| `list_files` | Lists the files in the working directory |
+| `read_file` | Reads a file in the current directory |
+
+## Adding commands
 
 # Notes
 
