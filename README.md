@@ -205,8 +205,14 @@ When you use a "fakegpt" client as the endpoint, the client will respond with ea
 
 It is advised to write a test script for each new command. You can run the `all_tests` test script to run all of the tests in the directory.
 
+# Known bugs
+
+1. Asychronicity isn't implemented properly yet as it will (eventually) lead to memory exhaustion due to infinite recursion. You will run out of context way before this ever happens but obviously this needs to be fixed with an event loop and shoehorned message passing.
+2. Because of 1, when a message comes in and we ask the user to confirm, the confirmation message isn't shown until the user presses "enter". This is something to do with the R interactive session. Using an event loop in the CommandHandler should also fix this.
+
 # TODO
 
+- Event loop to fix theoretical memory exhaustion and interaction annoyance (having to press enter)
 - Write a more succinct command format other than JSON
 - Need ability to keep track of own context length and modify or summarize past context to stay within context window.
 - add `create_commmand` command

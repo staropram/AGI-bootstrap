@@ -187,6 +187,7 @@ CommandHandler <- R6Class(
 			# if the AI is trying to chat to us, we
 			# don't want to ask permission for that
 			self$printMsg(cmdDecoded)
+         print("You may need to press enter to see prompt if not shown below")
 
 			# do not as for permission if in continous mode
 			if(config$continuous) {

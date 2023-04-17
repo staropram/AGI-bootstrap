@@ -4,8 +4,7 @@ config <- list(
 	aiName="test0",
 	runtimeDirPrefix="runtime",
 	#initialPrompt="agi_prompt_v0.1.txt",
-	#initialPrompt="agi_prompt_alt_1.txt",
-	initialPrompt="ibiza.txt",
+	initialPrompt="agi_prompt_alt_1.txt",
 	continuous=F,
 	cleanWorkingDir=T,
 	trackTokens=F, # not implemented yet, but leave here
