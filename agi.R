@@ -4,6 +4,7 @@ library(R6)
 library(jsonlite)
 library(promises)
 library(future)
+library(later)
 plan(multicore)
 #plan(sequential)
 

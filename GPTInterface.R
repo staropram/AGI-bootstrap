@@ -40,7 +40,7 @@ GPTInterface <- R6Class(
 		chatOpenAI = function(agent,msg) {
 			encodedMsg <- commandHandler$encodeCommand(msg)
 			agent$appendMessage("user",encodedMsg)
-			completion <- future({create_chat_completion(
+			completion <- future_promise({create_chat_completion(
 			  model = config$chatgpt$model,
 			  messages = agent$messages,
 			  max_tokens = config$chatgpt$max_tokens,
@@ -49,8 +49,13 @@ GPTInterface <- R6Class(
 			completion %...>% (function(r) {
 				response <- r$choices$message.content
 				agent$appendMessage("assistant",response)
-				commandHandler$handleCommand(response,agent)
 				agent$lastChatPartner <- msg$from
+            # wrap the call to handleCommand in a later so that 
+            # the promise will resolve and handleCommand will be
+            # called when the main thread is idle
+            later(function() {
+				   commandHandler$handleCommand(response,agent)
+            })
 			})
 			NULL
 		},
