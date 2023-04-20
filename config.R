@@ -5,9 +5,9 @@ config <- list(
 	runtimeDirPrefix="runtime",
 	#initialPrompt="agi_prompt_v0.1.txt",
 	initialPrompt="agi_prompt_alt_1.txt",
-	continuous=F,
+	continuous=T,
 	cleanWorkingDir=T,
-	trackTokens=F, # not implemented yet, but leave here
+	trackTokens=T, # not implemented yet, but leave here
 
 	# commands available to AI
 	commandEncoding = "JSON",
@@ -35,12 +35,13 @@ config <- list(
 
 	# FakeGPT options
 	fakegpt = list(
+		script = "all_tests",
 		#script = "spawn_agent_test",
 		#script = "google_search_test",
 		#script = "create_file_test",
 		#script = "list_files_test",
 		#script = "read_and_write_file_test",
-		script = "download_file_test",
+		#script = "download_file_test",
 		#script = "invalid_commands_test",
 		#script = "read_from_url_test",
 		artificialDelaySecs = 1

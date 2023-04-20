@@ -29,6 +29,8 @@ HumanAgent <- R6Class(
 			# any message originating from C0 or h0
 			# does not require permission, 
 			# we already validated the sender earlier
+			print("THIS")
+			browser()
 			if(msg$msg$from %in% c("C0","h0")) {
 				return(response)
 			}

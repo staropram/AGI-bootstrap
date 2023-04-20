@@ -79,8 +79,8 @@ CommandHandler <- R6Class(
 		# returns a list because we might want to
 		# add additional things in here in the future
 		validate = function(msg,agent) {
-			notValid <- list(isValid=F)
-			isValid <- list(isValid=T)
+			notValid <- list(isValid=F,setFrom=F)
+			isValid <- list(isValid=T,setFrom=F)
 			if(is.null(msg)) {
 				notValid$error <- "Null command"
 				return(notValid)
@@ -111,6 +111,18 @@ CommandHandler <- R6Class(
 			if(!is.null(errorMsg)) {
 				notValid$error <- errorMsg
 				return(notValid)
+			}
+
+			# check that the message has a "from" field
+			# this isn't mandatory because we can fill
+			# this in here (only an agent wouldn't set it)
+			if(is.null(msg$from)) {
+				# we passed msg by value so we can't change
+				# it so we add a flag to isValid so in
+				# the event the rest of the validation
+				# passes, we can check it in commandhandler
+				# messy, should make msg an object
+				isValid$setFrom <- T
 			}
 
 			# check src and destination for chat msg
@@ -165,6 +177,12 @@ CommandHandler <- R6Class(
 			# attempt to validate the command
 			if(validate) {
 				msgValidation <- self$validate(cmdDecoded$msg,agent)
+				# check if we need to set from field,
+				# should probably make a MSG an object
+				# so that validate can do this itself
+				if(msgValidation$setFrom) {
+					cmdDecoded$msg$from <- agent$id
+				}
 			} else {
 				msgValidation <- list(isValid=T)
 			}
@@ -222,28 +240,35 @@ CommandHandler <- R6Class(
 
 			# check if command was an "error" response
 			if(cmdMsg$action=="error") {
-				response <- commandHandler$encodeCommand(
-					list(
-						from="C0",
-						to=agent$id,
-						action="chat",
-						msg=cmdMsg$error
-					)
+				response <- list(
+					from="C0",
+					to=agent$id,
+					action="chat",
+					msg=cmdMsg$error
 				)
-				return(commandHandler$handleCommand(response,agent,validate=F))
+				# send token count if enabled
+				if(config$trackTokens) {
+					response$tokens_used <- agent$tokensUsed
+				}
+				encResponse <- commandHandler$encodeCommand(
+					response
+				)
+				return(commandHandler$handleCommand(encResponse,agent,validate=F))
 			}
 
 			if(cmdMsg$action=="interaction") {
-				response <- commandHandler$encodeCommand(
-					list(
-						from="h0",
-						to=agent$id,
-						action="chat",
-						msg=cmdMsg$msg
-					)
-				)
+				# send token count if enabled
+				if(config$trackTokens) {
+					cmdMsg$msg$tokens_used <- agent$tokensUsed
+				}
+				response <- commandHandler$encodeCommand(list(
+					from="h0",
+					to=agent$id,
+					action="chat",
+					msg=cmdMsg$msg
+				))
 				# do not validate this command
-				return(commandHandler$handleCommand(response,agent,validate=F))
+				return(response,agent,validate=F)
 			}
 
 			# call the command
@@ -261,12 +286,17 @@ CommandHandler <- R6Class(
 			# we need to wrap the response in a chat
 			# request so it gets routed correctly
 			if(cmdMsg$action!="chat") {
-				response <- commandHandler$encodeCommand(list(
-																								from="C0",
+				res <- list(
+					from="C0",
 					to=agent$id,
 					action="chat",
 					msg=r
-				))
+				)
+				# send token count if enabled
+				if(config$trackTokens) {
+					res$tokens_used <- agent$tokensUsed
+				}
+				response <- commandHandler$encodeCommand(res)
 				# do not "validate" own commands
 				validate <- F
 			} else {
@@ -274,10 +304,27 @@ CommandHandler <- R6Class(
 				response <- r
 			}
 
+			# send token count if enabled
+			#if(config$trackTokens) {
+			#	response$tokens_used <- agent$tokensUsed
+			#}
+
 			commandHandler$handleCommand(response,agent,validate)
 		},
 
+		getANSIColor = function(colorNum) {
+  			sprintf("\033[38;5;%dm", colorNum)
+		},
+
+		printField = function(name,value,color) {
+			cat(color,name,' : ',commandHandler$encodeCommand(value),'\033[0m\n',sep="")
+		},
+
 		printMsg = function(cmdMsg) {
+			commentColor <- "\033[38;5;93m"
+			paramColor <- "\033[38;5;42m"
+			actionColor <- "\033[38;5;214m"
+
 			msg <- cmdMsg$msg
 			# create a default
 			cmd <- self$commands[[msg$action]]
@@ -286,13 +333,13 @@ CommandHandler <- R6Class(
 				cmd$printMsg(msg)
 			} else {
 				# default print method
-				print_action(msg$action)
+				self$printField("action",msg$action,actionColor)
 				paramNames <- names(msg)[!names(msg) %in% c("action","comment")]
 				# print params
 				for(p in paramNames) {
-					print_param(p,msg[[p]])
+					self$printField(p,msg[[p]],paramColor)
 				}
-				print_comment(msg$comment)
+				self$printField("comment",msg$comment,commentColor)
 			}
 			flush.console()
 		},

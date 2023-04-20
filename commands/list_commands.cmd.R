@@ -8,6 +8,6 @@ command_list_commands <- list(
 
 	# add a list commands command
 	f=function(args) {
-		commandHandler$encodeCommand(commandHandler$commandList)
+		commandHandler$commandList
 	}
 )

@@ -12,6 +12,8 @@ command_source_r_file <- list(
 			return(paste0('{"error":"File\"',fn,'\"does not exist"}'))
 		}
 		op <- capture.output(source(fn))
-		paste(op,collapse="")
+		list(
+			output=paste(op,collapse="")
+		)
 	}
 )

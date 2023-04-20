@@ -174,8 +174,8 @@ command_read_from_url <- list(
         return(clean_content)
       }
     } else {
-      error_json <- list(error = "Error: Failed to fetch the content from the specified URL.")
-      return(toJSON(error_json, auto_unbox = TRUE))
+      #return(toJSON(error_json, auto_unbox = TRUE))
+		list(error = "Error: Failed to fetch the content from the specified URL.")
     }
   }
 )

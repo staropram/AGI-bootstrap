@@ -4,6 +4,7 @@ FakeAI <- R6Class(
 		config = NULL,
 		script = list(),
 		scriptIndex = 0,
+		tokensUsed = 0,
 
 		initialize = function(config) {
 			self$config <- config
@@ -55,7 +56,10 @@ FakeAI <- R6Class(
 			})
 			#print(paste0("fakeAI responds: ",response))
 			completion %...>% (function(r) {
+				agent$tokensUsed <- 20
+            later(function() {
 				  commandHandler$handleCommand(r,agent)
+				})
 			})
 			NULL
 		}

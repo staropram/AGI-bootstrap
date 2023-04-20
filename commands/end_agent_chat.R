@@ -9,6 +9,8 @@ command_end_agent_chat <- list(
   f = function(args) {
 	  # at the moment just leave the agent alive
 	  # and inform the AI that the chat has ended
-     paste0('{"status":"chat with \"',args$id,'\" ended"}')
+	  list(
+        status=paste0('chat with "',args$id,'" ended')
+	  )
   }
 )

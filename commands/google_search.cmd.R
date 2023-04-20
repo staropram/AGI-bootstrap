@@ -57,7 +57,10 @@ command_google_search <- list(
     # Format search results
     output <- format_google_results(results)
     
-    return(paste0('{"status":"ok","output":"',output,'"}'))
+	 list(
+			status="OK",
+			output=output
+	)
   }
 )
 

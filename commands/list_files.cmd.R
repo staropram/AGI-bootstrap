@@ -5,6 +5,8 @@ command_list_files <- list(
 		comment="List the files in the working directory."
 	),
   f = function(args) {
-		paste0(list.files(config$runtimeDir),collapse=",")
+	  list(
+		  files <- paste0(list.files(config$runtimeDir),collapse=",")
+	  )
   }
 )

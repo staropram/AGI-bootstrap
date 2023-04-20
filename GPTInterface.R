@@ -50,6 +50,7 @@ GPTInterface <- R6Class(
 				response <- r$choices$message.content
 				agent$appendMessage("assistant",response)
 				agent$lastChatPartner <- msg$from
+				agent$tokensUsed <- r$usage$total_tokens
             # wrap the call to handleCommand in a later so that 
             # the promise will resolve and handleCommand will be
             # called when the main thread is idle

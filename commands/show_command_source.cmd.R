@@ -15,7 +15,9 @@ command_show_command_source <- list(
 		f <- file(fn,"r")
 		content <- paste(readLines(f),collapse="\n")
 		close(f)
-		content
+		list(
+			content=content
+		)
 	}
 )
 

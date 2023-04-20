@@ -18,6 +18,5 @@ command_read_file <- list(
          status = "OK",
          content = content
       )
-      commandHandler$encodeCommand(response)
 	}
 )

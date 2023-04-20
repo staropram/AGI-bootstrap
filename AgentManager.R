@@ -89,10 +89,14 @@ AgentManager <- R6Class(
 
 		getTokensUsed = function(id) {
 			if(! id %in% names(self$agents)) {
-				return('{"error":"invalid agent id"}')
+				return(list(
+					error="Invalid agent ID"
+				))
 			}
 			tokens <- self$agents[[id]]$tokensUsed
-			paste0('{"tokens_used":"',tokens,'"}')
+			list(
+				tokens_used=tokens
+			)
 		}
 
 	)

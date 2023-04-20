@@ -10,9 +10,8 @@ command_write_file <- list(
 	f=function(args) {
 		fn <- paste0(config$runtimeDir,"/",args$fn)
 		writeLines(args$content,fn)
-      response <- list(
+      list(
          status="OK"
       )
-      commandHandler$encodeCommand(response)
 	}
 )
