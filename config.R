@@ -5,7 +5,7 @@ config <- list(
 	runtimeDirPrefix="runtime",
 	#initialPrompt="agi_prompt_v0.1.txt",
 	initialPrompt="agi_prompt_alt_1.txt",
-	continuous=T,
+	continuous=F,
 	cleanWorkingDir=T,
 	trackTokens=T, # not implemented yet, but leave here
 

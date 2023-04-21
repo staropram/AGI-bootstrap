@@ -38,6 +38,7 @@ GPTInterface <- R6Class(
 		},
 
 		chatOpenAI = function(agent,msg) {
+			Sys.sleep(0.001)
 			encodedMsg <- commandHandler$encodeCommand(msg)
 			agent$appendMessage("user",encodedMsg)
 			completion <- future_promise({create_chat_completion(
