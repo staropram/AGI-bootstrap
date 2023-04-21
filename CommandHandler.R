@@ -250,25 +250,25 @@ CommandHandler <- R6Class(
 				if(config$trackTokens) {
 					response$tokens_used <- agent$tokensUsed
 				}
-				encResponse <- commandHandler$encodeCommand(
-					response
-				)
-				return(commandHandler$handleCommand(encResponse,agent,validate=F))
+				#encResponse <- commandHandler$encodeCommand(
+				#	response
+				#)
+				return(self$execute(response,agent))
+				#return(commandHandler$handleCommand(encResponse,agent,validate=F))
 			}
 
 			if(cmdMsg$action=="interaction") {
-				# send token count if enabled
-				if(config$trackTokens) {
-					cmdMsg$msg$tokens_used <- agent$tokensUsed
-				}
-				response <- commandHandler$encodeCommand(list(
+				response <- list(
 					from="h0",
 					to=agent$id,
 					action="chat",
 					msg=cmdMsg$msg
-				))
-				# do not validate this command
-				return(response,agent,validate=F)
+				)
+				# send token count if enabled
+				if(config$trackTokens) {
+					response$tokens_used <- agent$tokensUsed
+				}
+				return(self$execute(response,agent))
 			}
 
 			# call the command
