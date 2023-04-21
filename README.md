@@ -205,9 +205,9 @@ When you use a "fakegpt" client as the endpoint, the client will respond with ea
 
 It is advised to write a test script for each new command. You can run the `all_tests` test script to run all of the tests in the directory.
 
-# Known bugs
+# Known issues
 
-1. When a message comes in and we ask the user to confirm, the confirmation message isn't shown until the user presses "enter". This is something to do with the R interactive session. This is because the way I've done asynchronous chat.
+1. There was a strange issue previously which meant that when a promise "then" block was resolved, nothing after was printed to the screen until enter was pressed. This odd behaviour was fixed by adding a small Sys.sleep(0.0001) but I have no idea why this fixes it. So if you see what looks like stalled output, press enter to see if it resolves. In the meantime I'm investigating a different async paradigm.
 
 # TODO
 
