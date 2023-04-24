@@ -1,3 +1,5 @@
 hi I'd like to talk to you, I am h0. You can get a command list with:
 
 { "from"="a0", to="C0", "action": "list_commands" }
+
+You can't talk directly to C0 but you can send it commands

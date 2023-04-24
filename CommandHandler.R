@@ -287,7 +287,7 @@ CommandHandler <- R6Class(
 			# request so it gets routed correctly
 			if(cmdMsg$action!="chat") {
 				res <- list(
-					from="h0",
+					from="C0",
 					to=agent$id,
 					action="chat",
 					msg=r
