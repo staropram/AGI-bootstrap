@@ -56,6 +56,10 @@ HumanAgent <- R6Class(
 
 		# gets user input
 		getInput = function(msg) {
+         if(config$alwaysChat) {
+            return(readline(": "))
+         }
+
 			a <- "z"
 			while(a!="i") {
 				a <- readline("i-interact, d-debug, q-quit: ")
@@ -93,12 +97,18 @@ HumanAgent <- R6Class(
 				)))
 			}
 
-			commandHandler$encodeCommand(list(
+         commandHandler$execute(list(
 				from="h0",
 				to=msg$from,
 				action="chat",
 				msg=response
 			))
+			#commandHandler$encodeCommand(list(
+			#	from="h0",
+			#	to=msg$from,
+			#	action="chat",
+			#	msg=response
+			#))
 		}
 	)
 )

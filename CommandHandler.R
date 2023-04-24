@@ -196,7 +196,7 @@ CommandHandler <- R6Class(
 				# we can still print invalid commands
 				# as they are already parsed by the
 				# transcoder
-				self$printMsg(cmdDecoded)
+				#self$printMsg(cmdDecoded)
 
 				# send the "error" action to be executed
 				return(self$execute(response,agent))
@@ -204,7 +204,7 @@ CommandHandler <- R6Class(
 
 			# if the AI is trying to chat to us, we
 			# don't want to ask permission for that
-			self$printMsg(cmdDecoded)
+			#self$printMsg(cmdDecoded$msg)
          #print("You may need to press enter to see prompt if not shown below")
 
 			# do not as for permission if in continous mode
@@ -223,7 +223,6 @@ CommandHandler <- R6Class(
 				return(self$execute(response,agent))
 			} else if(permission$choice=="i") {
 				# respond the interaction
-				# maybe this should not be "error"
 				response <- list(
 					action="interaction",
 					msg=permission$msg
@@ -233,6 +232,7 @@ CommandHandler <- R6Class(
 		},
 
 		execute = function(cmdMsg,agent) {
+			self$printMsg(cmdMsg)
 			# if we are asked to exit, do so
 			if(cmdMsg$action=="exit") {
 				return()
@@ -287,7 +287,7 @@ CommandHandler <- R6Class(
 			# request so it gets routed correctly
 			if(cmdMsg$action!="chat") {
 				res <- list(
-					from="C0",
+					from="h0",
 					to=agent$id,
 					action="chat",
 					msg=r
@@ -320,12 +320,11 @@ CommandHandler <- R6Class(
 			cat(color,name,' : ',commandHandler$encodeCommand(value),'\033[0m\n',sep="")
 		},
 
-		printMsg = function(cmdMsg) {
+		printMsg = function(msg) {
 			commentColor <- "\033[38;5;93m"
 			paramColor <- "\033[38;5;42m"
 			actionColor <- "\033[38;5;214m"
 
-			msg <- cmdMsg$msg
 			# create a default
 			cmd <- self$commands[[msg$action]]
 			if("printMsg" %in% names(cmd)) {
