@@ -231,3 +231,4 @@ It is advised to write a test script for each new command. You can run the `all_
 - paramaterize the read_url with chatgpt summary function
 - every msg must have a to and from id. Might make sense to have a Router object that handles that and a HumanAgent class so you could in theory have multiple humans
 - Need a warning when context gets too big to clean it out or compress it
+- from_id|to_id|command_id|(param1|param2,...,paramN)
